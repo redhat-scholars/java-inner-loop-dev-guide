@@ -1,20 +1,146 @@
-= Welcome to Template Tutorial
+= Overview
+include::_attributes.adoc[]
 :page-layout: home
 :!sectids:
 
-[.text-center.strong]
-== Publish Services to Kubernetes
+Not that far away we were used to develop monolithic multitier applications where the main theme was:
 
-A Kubernetes tutorial to show how you can deploy a Java service to a Kubernetes cluster as it was a child game.
+ [UI <-> JavaEE <-> Database]
+ 
+This has changed ever since we started to embrace Micro Services Architectures and specially with the advent of Kubernetes
+
+[quote]
+____
+"We have started to replace monoliths by sets of container-based microservices running in a +
+Kubernetes cluster"
+____
+
+In general we all aggree these distributed architectures have lots of benefits but also pose some challenges. Among these challanges we'd like to *highlight here the problems a developer has to face when developing kubernetes native applications*.
+
+The truth is that, even though you will evetually run your code inside a kubernetes cluster, you still develop (in general) locally where you have your IDE, compilers, etc. There are several ways to explain the development cycle, here you are an informal definition. 
+
+[quote]
+____
+There are *two loops*, *one closer* to the developer *inner-loop*; *where you code, test, debug iteratively* and *one further away* the *outer-loop*; *where your code runs inside a container image you have to build, push and deploy* and... that take a lot longer.
+____
+
+.Inner vs Outer "one more debug session nightmare"
+image::inner-vs-outer-loop.png[Inner vs Outer Loop]
+
+You may think... I can "test it all" locally, then just push my code and the rest is history. Something like this.
+
+.Kubernetes Native Development Loop
+image::kubernetes-development-loop.png[Kubernetes Native Development Loop]
+
+Well if this is your case... then you may not need to continue BUT if you happen to need to connect to several services, databases, etc. then having "it-all" locally maybe it's not an option, if that is the case stay!
+
+Well, the *goal* of this guide is simple *exploring different approaches to help you with the inner-loop of the kubernetes native development workflow*.
+
+[#tldr]
+== TL;DR
+
+*This tutorial will guide you to extend your Java Inner Loop so that it literally overlaps with your kubernetes cluster*, something like this. You'll find how to do this for *Spring Boot* and *Quarkus*. We will provide you with sample code and configurations for *PostgreSQL* and *Oracle RDBMS*.
+
+[NOTE]
+====
+* This guide concentrates on Java but concepts and the approach involving Telepresence applies to any technology. 
+* The cases involving Oracle RDBMS explain how to deploy Oracle in an OpenShift cluster but once done they consider that database as external to the cluster.
+====
+
+.Inner extended to the kubernetes cluster
+image::inner-vs-outer-loop-extended.png[Inner extended to the kubernetes cluster]
+
+[#the-challenge]
+== The Challenge
+
+Given the distributed nature of nowdays applications *developers find themselves dealing with a pletora of services they need to integrate with* while developing. *So the challenge seems to be that those services need to be at reach and sometimes this is not easy*.
+
+Let's review some of the approches you can take in order to mitigate this problem.
+
+[#approaches]
+== Approaches To Mitigate The Problem
+
+Here are some approaches to reduce the problem:
+
+* Using link:https://docs.docker.com/compose/[Docker Compose, window=_blank] and deploy all the services locally
+* Using link:https://minikube.sigs.k8s.io/[minikube, window=_blank], link:https://kind.sigs.k8s.io/[kind, window=_blank], etc. and deploy all the services there
+* Mocking up all the services you interact with
+
+*All these approaches are valid and plausible but some times they're not the best way to go or just too complicated to maintain*. For instance some times you need access to several services in different namespaces and you have to get all those with you in your local cluster... other times some services are external and reachable only from the remote cluster... and maybe mocking-up code is not your thing (or don't have the skills or time to do it).
+
+This guide explores some alternatives to extend your local development environment (*inner-loop*) to the remote cluster for Java applications using two frameworks: Spring Boot and link:https://quarkus.io[Quarkus, window=_blank].
+
+[#details]
+== Details
+
+This tutorial provides you with a super-simple CRUD microservice (in two flavors: Spring Boot and link:https://quarkus.io[Quarkus, window=_blank]), *`FruitService`*, that implements the usual functions: create, update, delete, find all, etc. mapped to a table in a releational database.
+
+No need to code this time, the Java code is simple, it works and we have tested it against, H2, PostgreSQL and Oracle RDBMS.
+
+.So what will you do in this tutorial? 
+You will:
+
+* Deploy the code against PostgreSQL directly from the command line using the link:https://www.eclipse.org/jkube:[JKube] maven plugin
+* You will also learn how JKube leverages Source to Image (link:https://docs.openshift.com/container-platform/{oc-version}/builds/understanding-image-builds.html#builds-strategy-s2i-build_understanding-image-builds[S2I]) to speed up the process of building OCI images inside OpenShift.
+* You'll find out how to do the same for Quarkus but this time using the OpenShift plugin instead of JKube
+* We will show you how to use link:https://telepresence.io:[Telepresence] to speed up development iterations.
+* Finally you'll learn how to enable link:https://quarkus.io/guides/maven-tooling#remote-development-mode[Remote Development Mode] for your Quarkus project
+
+Optionally, although highly recommendable, you will do the same but this time against an Oracle database. You will learn how to use a Kubernetes `Service` of type `ExternalName` to point to the Oracle database as if it were not deployed in your cluster, hence external. 
+
+NOTE: No worries if you don't have an Oracle database at hand, we'll show you how you can have an Oracle database running in a container in your OpenShift cluster (for testing purposes and as long as you have an OTN developer account you can use to pull images from the Oracle Container Registry).
 
 [.tiles.browse]
 == Browse modules
 
 [.tile]
-.xref:01-setup.adoc[Get Started]
-* xref:01-setup.adoc#minikube[Minikube]
+xref:01-setup.adoc[Get Started]
+//* xref:01-setup.adoc#minikube[Minikube]
 
 [.tile]
-.xref:02-deploy.adoc[Deploying]
-* xref:02-deploy.adoc#package[Package the Application]
-* xref:02-deploy.adoc#deploy[Deploy the Application]
+.xref:02a-spring-boot-common.adoc[Spring Boot Inner-Loop Development]
+* xref:02a-spring-boot-common.adoc#the-code[Common]
+** xref:02a-spring-boot-common.adoc#the-code[The code]
+** xref:02a-spring-boot-common.adoc#maven-profiles[Maven Profiles]
+** xref:02a-spring-boot-common.adoc#run-local[Running the code locally against H2]
+* xref:02b-spring-boot-deploy-postgresql.adoc[Using PostgreSQL as Database]
+*** xref:02b-spring-boot-deploy-postgresql.adoc#deploy-database[Deploying PostgreSQL Database]
+*** xref:02b-spring-boot-deploy-postgresql.adoc#deploy-code[Deploying the code]
+*** xref:02b-spring-boot-deploy-postgresql.adoc#run-local-telepresence[Extending the inner-loop with Telepresence]
+*** xref:02b-spring-boot-deploy-postgresql.adoc#binary-deploy[Binary deploy S2I]
+* xref:02c-spring-boot-deploy-oracle.adoc[Using Oracle as Database]
+*** xref:02c-spring-boot-deploy-oracle.adoc#deploy-database[Deploying Oracle RDBMS]
+*** xref:02c-spring-boot-deploy-oracle.adoc#deploy-code[Deploying the code]
+*** xref:02c-spring-boot-deploy-oracle.adoc#run-local-telepresence[Extending the inner-loop with Telepresence]
+*** xref:02c-spring-boot-deploy-oracle.adoc#binary-deploy[Binary deploy S2I]
+
+[.tile]
+.xref:03a-quarkus-common.adoc[Quarkus Inner-Loop Development]
+* xref:03a-quarkus-common.adoc#the-code[Common]
+** xref:03a-quarkus-common.adoc#the-code[The code]
+** xref:03a-quarkus-common.adoc#maven-profiles[Maven Profiles]
+** xref:03a-quarkus-common.adoc#run-local[Running the code locally against H2]
+* xref:03b-quarkus-deploy-postgresql.adoc[Using PostgreSQL as Database]
+*** xref:03b-quarkus-deploy-postgresql.adoc#deploy-database[Deploying PostgreSQL Database]
+*** xref:03b-quarkus-deploy-postgresql.adoc#deploy-code[Deploying the code]
+*** xref:03b-quarkus-deploy-postgresql.adoc#run-local-telepresence[Extending the inner-loop with Telepresence]
+*** xref:03b-quarkus-deploy-postgresql.adoc#binary-deploy[Binary deploy S2I]
+* xref:03c-quarkus-deploy-oracle.adoc[Using Oracle as Database]
+*** xref:03c-quarkus-deploy-oracle.adoc#deploy-database[Deploying Oracle RDBMS]
+*** xref:03c-quarkus-deploy-oracle.adoc#deploy-code[Deploying the code]
+*** xref:03c-quarkus-deploy-oracle.adoc#run-local-telepresence[Extending the inner-loop with Telepresence]
+*** xref:03c-quarkus-deploy-oracle.adoc#binary-deploy[Binary deploy S2I]
+
+//[.tile]
+//.xref:02b-spring-boot-deploy-postgresql.adoc[Spring Boot => PostgreSQL]
+//** xref:02b-spring-boot-deploy-postgresql.adoc#deploy-database[Deploying PostgreSQL]
+//** xref:02b-spring-boot-deploy-postgresql.adoc#deploy-code[Deploying the code]
+//** xref:02b-spring-boot-deploy-postgresql.adoc#run-local-telepresence[Extending the inner-loop with Telepresence]
+//** xref:02b-spring-boot-deploy-postgresql.adoc#binary-deploy[Binary deploy S2I]
+//
+//[.tile]
+//.xref:02c-spring-boot-deploy-oracle.adoc[Spring Boot => Oracle]
+//** xref:02c-spring-boot-deploy-oracle.adoc#deploy-database[Deploying PostgreSQL]
+//** xref:02c-spring-boot-deploy-oracle.adoc#deploy-code[Deploying the code]
+//** xref:02c-spring-boot-deploy-oracle.adoc#run-local-telepresence[Extending the inner-loop with Telepresence]
+//** xref:02c-spring-boot-deploy-oracle.adoc#binary-deploy[Binary deploy S2I]

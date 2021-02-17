@@ -1,0 +1,19 @@
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDataSource
+metadata:
+  finalizers:
+    - grafana.cleanup
+  name: prometheus-grafanadatasource
+spec:
+  datasources:
+    - access: proxy
+      editable: true
+      secureJsonData: {}
+      name: Prometheus
+      url: 'http://prometheus-operated:9090'
+      jsonData:
+        timeInterval: 5s
+      isDefault: true
+      version: 1
+      type: prometheus
+  name: prometheus-datasources.yaml

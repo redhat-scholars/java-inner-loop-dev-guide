@@ -1,0 +1,49 @@
+include::versions.adoc[]
+
+The following CLI tools are optional for running the exercises in this tutorial.
+// Although they are used in the tutorial, you could use others without any problem.
+
+[cols="4*^,4*.",options="header,+attributes"]
+|===
+
+|**Tool**|**macOS**|**Fedora**|**windows**
+| `odo {odo-version}`
+| https://mirror.openshift.com/pub/openshift-v4/clients/odo/{odo-version}/odo-darwin-amd64[Download]
+| https://mirror.openshift.com/pub/openshift-v4/clients/odo/{odo-version}/odo-linux-amd64[Download]
+| https://mirror.openshift.com/pub/openshift-v4/clients/odo/{odo-version}/odo-windows-amd64.exe[Download]
+
+
+// | https://github.com/mikefarah/yq[yq v2.4.1]
+// | https://github.com/mikefarah/yq/releases/download/2.4.1/yq_darwin_amd64[Download]
+// | https://github.com/mikefarah/yq/releases/download/2.4.1/yq_linux_amd64[Download]
+// | https://github.com/mikefarah/yq/releases/download/2.4.1/yq_windows_amd64.exe[Download]
+
+| https://github.com/stedolan/jq[jq v1.6.0]
+| https://github.com/stedolan/jq/releases/download/jq-1.6/jq-osx-amd64[Download]
+| https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64[Download]
+| https://github.com/stedolan/jq/releases/download/jq-1.6/jq-win64.exe[Download]
+
+// | https://httpie.org/[httpie]
+// | `brew install httpie`
+// | `dnf install httpie`
+// | https://httpie.org/doc#windows-etc
+
+// | watch
+// | `brew install watch`
+// | `dnf install procps-ng`
+// |
+// 
+// | kubectx and kubens
+// | `brew install kubectx`
+// | https://github.com/ahmetb/kubectx
+// |
+// 
+// | https://github.com/rakyll/hey[hey]
+// | `brew install hey`
+// | https://storage.googleapis.com/jblabs/dist/hey_linux_v0.1.2[Download]
+// | https://storage.googleapis.com/jblabs/dist/hey_win_v0.1.2.exe[Download]
+
+| link:https://www.telepresence.io:[telepresence]
+3+| `https://www.telepresence.io/reference/install`
+
+|===

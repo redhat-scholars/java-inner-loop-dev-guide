@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 1600 1200" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <path d="M513.348,399.57C494.787,432.42 485.033,469.511 485.033,507.242C485.033,628.124 583.027,726.118 703.909,726.118L703.909,693.374C601.111,693.374 517.777,610.04 517.777,507.242C517.777,475.155 526.072,443.614 541.856,415.678L513.348,399.57Z" style="fill:rgb(80,217,38);"/>
+    <g transform="matrix(-0.354631,0.935006,-0.935006,-0.354631,1427.81,28.9664)">
+        <path d="M531.836,371.973C501.516,410.543 485.033,458.181 485.033,507.242C485.033,615.431 564.078,707.389 671.04,723.636L675.957,691.263C584.997,677.447 517.777,599.246 517.777,507.242C517.777,465.521 531.794,425.009 557.579,392.21L531.836,371.973Z" style="fill:rgb(38,123,217);"/>
+    </g>
+    <g transform="matrix(-0.351245,-0.936284,0.936284,-0.351245,476.231,1344.47)">
+        <path d="M500.016,427.652C490.114,453.019 485.033,480.011 485.033,507.242C485.033,628.043 583.108,726.118 703.909,726.118C717.72,726.118 731.501,724.811 745.066,722.214L738.909,690.053C727.373,692.262 715.654,693.374 703.909,693.374C601.18,693.374 517.777,609.971 517.777,507.242C517.777,484.085 522.099,461.131 530.519,439.559L500.016,427.652Z" style="fill:rgb(242,94,13);"/>
+    </g>
+    <text x="213.665px" y="632.924px" style="font-family:'RedHatText-Regular', 'Red Hat Text';font-size:96px;">C<tspan x="281.921px " y="632.924px ">o</tspan>de</text>
+    <g transform="matrix(1,0,0,1,351.951,-385.449)">
+        <text x="241.584px" y="632.924px" style="font-family:'RedHatText-Regular', 'Red Hat Text';font-size:96px;">B<tspan x="304.848px " y="632.924px ">u</tspan>ild</text>
+    </g>
+    <g transform="matrix(1,0,0,1,744.466,0)">
+        <text x="237.324px" y="632.924px" style="font-family:'RedHatText-Regular', 'Red Hat Text';font-size:96px;">T<tspan x="286.764px 340.716px 383.148px " y="632.924px 632.924px 632.924px ">est</tspan></text>
+    </g>
+</svg>

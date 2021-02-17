@@ -1,0 +1,280 @@
+= Spring Boot Inner-loop
+include::_attributes.adoc[]
+
+[#the-code]
+== The code
+
+Our simple application exposes a CRUD interface for a table (`FRUIT`) in a relational database by using JPA and Hiebernate as the `ORM` framework. To do so, it uses JPA annotations like `@Entity`, `@Id`, etc. You can find the Java code of the JPA entity below.
+
+NOTE: In order to make the code more portable we have annotated the `id` attribute so that the value is generated using a sequence named `FRUIT_SEQ`. 
+
+[.lines_7]
+[.console-input]
+[source, java]
+----
+@Entity
+public class Fruit {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "FruitSequence")
+    @SequenceGenerator(name = "FruitSequence", sequenceName = "FRUIT_SEQ")
+    private Integer id;
+
+    private String name;
+
+    public Fruit() {
+    }
+
+    public Fruit(String type) {
+        this.name = type;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+}
+----
+
+The actual service is implemented in class `FruitController` find below a simplified version of the code. Nothing complicated here.
+
+[.lines_7]
+[.console-input]
+[source, java]
+----
+@RestController
+@RequestMapping(value = "/api/fruits")
+public class FruitController {
+
+    private final FruitRepository repository;
+
+    public FruitController(FruitRepository repository) {
+        this.repository = repository;
+    }
+
+    @GetMapping("/{id}")
+    public Fruit get(@PathVariable("id") Integer id) {
+        ...
+        return repository.findById(id).get();
+    }
+
+    @GetMapping
+    public List<Fruit> getAll() {
+        ...
+        return StreamSupport
+                .stream(fruits, false)
+                .collect(Collectors.toList());
+    }
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping
+    public Fruit post(@RequestBody(required = false) Fruit fruit) {
+        ...
+        return repository.save(fruit);
+    }
+
+    ...
+}
+----
+
+[#getting-the-code]
+== Getting the Code
+
+Time to get our hands dirty. Clone or download the code, your choice.
+
+[tabs]
+====
+Clone the code::
++
+[.console-input]
+[source,bash,subs="attributes+"]
+--
+git clone --single-branch --branch {git_ref} {git_base}/{git_uri}.git
+--
+Download the code::
++
+[.console-input]
+[source,bash,subs="attributes+"]
+--
+curl -L {git_base}/{git_uri}/archive/{git_ref}.zip -o {git_uri}.zip
+unzip {git_uri}.zip
+mv {git_uri}-{git_ref} {git_uri}
+--
+====
+
+Change to the dir where the code is.
+
+[.console-input]
+[source,bash,subs="attributes+"]
+--
+cd {git_uri}/apps/spring-boot-app
+--
+
+[#maven-profiles]
+== Maven Profiles
+
+As we stated at the begging we want to use different databases, *H2* to develop quickcly then either *PostgreSQL* or *Oracle* once the code is deployed in OpenShift. In order to do so we have defined 3 profiles:
+
+* *local* for H2
+* *openshift-postgresql* for PostgreSQL
+* *openshift-oracle* for Oracle
+
+[tabs]
+====
+local::
++
+[.console-input]
+[source,properties,subs="attributes+"]
+--
+# H2 settings
+spring.datasource.url=jdbc:h2:mem:testdb
+spring.datasource.driverClassName=org.h2.Driver
+spring.datasource.driver-class-name=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=password
+spring.datasource.platform=h2
+
+spring.jpa.properties.hibernate.hbm2ddl.import_files=import-h2.sql
+spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+spring.jpa.hibernate.ddl-auto=create
+--
+openshift-postgresql::
++
+[.console-input]
+[source,properties,subs="attributes+"]
+--
+# PostgreSQL settings
+spring.datasource.url=jdbc:postgresql://$\{SERVICE_DB_HOST}:5432/$\{SERVICE_DB_NAME}
+spring.datasource.username=$\{SERVICE_DB_USER}
+spring.datasource.password=$\{SERVICE_DB_PASSWORD}
+spring.datasource.driver-class-name=org.postgresql.Driver
+spring.datasource.platform=postgresql
+
+spring.jpa.properties.hibernate.hbm2ddl.import_files=import-postgresql.sql
+spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.hibernate.ddl-auto=create
+
+## To avoid CLOB related error...
+spring.jpa.properties.hibernate.jdbc.lob.non_contextual_creation=true
+--
+openshift-oracle::
++
+[.console-input]
+[source,properties,subs="attributes+"]
+--
+# Oracle settings
+spring.datasource.url=jdbc:oracle:thin:@$\{SERVICE_DB_HOST}:1521/$\{SERVICE_DB_NAME}
+spring.datasource.username=$\{SERVICE_DB_USER}
+spring.datasource.password=$\{SERVICE_DB_PASSWORD}
+spring.datasource.driver.class=oracle.jdbc.driver.OracleDriver
+spring.datasource.platform=oracle
+
+spring.jpa.properties.hibernate.hbm2ddl.import_files=import-oracle.sql
+spring.jpa.database-platform=org.hibernate.dialect.Oracle12cDialect
+spring.jpa.hibernate.ddl-auto=create
+--
+====
+
+There are accordingly 3 different `import.sql` files, basically the motivation is the different way of refering to the next value of a database sequence.
+
+[tabs]
+====
+import-h2.sql::
++
+[.console-input]
+[source,properties,subs="attributes+"]
+--
+insert into fruit (id, name) values (FRUIT_SEQ.NEXTVAL, 'Cherry');
+insert into fruit (id, name) values (FRUIT_SEQ.NEXTVAL, 'Apple');
+insert into fruit (id, name) values (FRUIT_SEQ.NEXTVAL, 'Banana');
+--
+import-postgresql.sql::
++
+[.console-input]
+[source,properties,subs="attributes+"]
+--
+insert into fruit (id, name) values ( nextval ('FRUIT_SEQ'), 'Cherry');
+insert into fruit (id, name) values ( nextval ('FRUIT_SEQ'), 'Apple');
+insert into fruit (id, name) values ( nextval ('FRUIT_SEQ'), 'Banana');
+--
+import-oracle.sql::
++
+[.console-input]
+[source,properties,subs="attributes+"]
+--
+insert into fruit (id, name) values (FRUIT_SEQ.NEXTVAL, 'Cherry');
+insert into fruit (id, name) values (FRUIT_SEQ.NEXTVAL, 'Apple');
+insert into fruit (id, name) values (FRUIT_SEQ.NEXTVAL, 'Banana');
+--
+====
+
+[#run-local]
+== Running the code locally against H2
+
+One decision made for this example was to keep it as SQL-standard as possible so that we can move to different database as esasily as possible. I know, some times this is not possible or ideal... but it's ok for this example.
+
+As we have said before in this guide you'll not have to code, instead we'll focus on running, testing, deploying, etc.
+
+Let's get started and see if the code works locally and using H2.
+
+[.console-input]
+[source,bash,options="nowrap",subs="attributes+"]
+----
+mvn clean spring-boot:run -Dspring-boot.run.profiles=local -Plocal
+----
+
+You should get this output.
+
+.TIPS
+[TIP]
+===============================
+Pay attention to the profile in use => *The following profiles are active: `local`*. 
+
+Also the `import.sql` file used => *Executing import script 'file:/Users/nostromo/.../import-h2.sql'*
+===============================
+
+[.console-output]
+[source,bash,subs="attributes+"]
+----
+...
+2021-01-28 INFO 59429 --- [  restartedMain] dev.snowdrop.example.ExampleApplication  : Starting ExampleApplication on nostromo with PID 59429 (/Users/nostromo/java-inner-loop-dev-guide/target/classes started by cvicensa in /Users/nostromo/java-inner-loop-dev-guide)
+2021-01-28 INFO 59429 --- [  restartedMain] dev.snowdrop.example.ExampleApplication  : The following profiles are active: local
+...
+2021-01-28 INFO 59429 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2021-01-28 INFO 59429 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 42ms. Found 1 JPA repository interfaces.
+...
+2021-01-28 INFO 59429 --- [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1352 ms
+2021-01-28 INFO 59429 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2021-01-28 INFO 59429 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2021-01-28 INFO 59429 --- [  restartedMain] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:testdb'
+2021-01-28 INFO 59429 --- [  restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2021-01-28 INFO 59429 --- [  restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.4.21.Final
+2021-01-28 INFO 59429 --- [  restartedMain] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.0.Final}
+2021-01-28 INFO 59429 --- [  restartedMain] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
+2021-01-28 INFO 59429 --- [  restartedMain] o.h.t.schema.internal.SchemaCreatorImpl  : HHH000476: Executing import script 'file:/Users/nostromo/java-inner-loop-dev-guide/target/classes/import-h2.sql'
+2021-01-28 INFO 59429 --- [  restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-01-28 INFO 59429 --- [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+...
+2021-01-28 INFO 59429 --- [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2021-01-28 INFO 59429 --- [  restartedMain] dev.snowdrop.example.ExampleApplication  : Started ExampleApplication in 3.632 seconds (JVM running for 4.2)
+----
+
+Now open a browser and point to link:http://localhost:8080:[http://localhost:8080]
+
+You should see this:
+
+TIP: You can edit, save, delete to test the functionalities implemented by `FruitController`
+
+image::fruit-service-h2-display.png[Fruit Service on H2]
+

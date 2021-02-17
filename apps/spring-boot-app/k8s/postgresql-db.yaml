@@ -1,0 +1,175 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  annotations:
+    template.openshift.io/expose-DB_USER: '{.data[''DB_USER'']}'
+    template.openshift.io/expose-DB_PASSWORD: '{.data[''DB_PASSWORD'']}'
+    template.openshift.io/expose-DB_NAME: '{.data[''DB_NAME'']}'
+    #service.binding/POSTGRESQL_USER: 'path={.data.POSTGRESQL_USER}' 
+    #service.binding/POSTGRESQL_PASSWORD: 'path={.data.POSTGRESQL_PASSWORD}' #annotate here.
+    #service.binding/POSTGRESQL_DATABASE: 'path={.data.POSTGRESQL_DATABASE}' #annotate here.
+  labels:
+    template: postgresql-persistent-template
+  name: postgresql-db
+stringData:
+  DB_USER: luke
+  DB_PASSWORD: secret
+  DB_NAME: FRUITSDB
+  DB_HOST: postgresql-db
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    template.openshift.io/expose-uri: postgres://{.spec.clusterIP}:{.spec.ports[?(.name=="postgresql")].port}
+    service.binding/DB_CREDS: 'path={.spec.selector.name},objectType=Secret'
+  labels:
+    app: postgresql-db
+    template: postgresql-persistent-template
+  name: postgresql-db
+spec:
+  ports:
+  - name: postgresql
+    nodePort: 0
+    port: 5432
+    protocol: TCP
+    targetPort: 5432
+  selector:
+    name: postgresql-db
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app: postgresql-db
+    app.kubernetes.io/component:postgresql-db
+    app.kubernetes.io/instance: postgresql-db
+    app.kubernetes.io/part-of: spring-boot-app
+    #app.openshift.io/runtime: postgresql
+    app.kubernetes.io/name: postgresql
+    template: postgresql-persistent-template
+  name: postgresql-db
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  annotations:
+    template.alpha.openshift.io/wait-for-ready: "true"
+    service.binding/DB_CREDS: 'path={.spec.selector.name},objectType=Secret' 
+  labels:
+    app: postgresql-db
+    app.kubernetes.io/component: postgresql-db
+    app.kubernetes.io/instance: postgresql-db
+    app.kubernetes.io/part-of: spring-boot-app
+    #app.openshift.io/runtime: postgresql
+    app.kubernetes.io/name: postgresql
+    template: postgresql-persistent-template
+  name: postgresql-db
+spec:
+  replicas: 1
+  selector:
+    name: postgresql-db
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        name: postgresql-db
+    spec:
+      containers:
+      - capabilities: {}
+        envFrom:
+        - secretRef:
+            name: postgresql-db
+        image: ' '
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          exec:
+            command:
+            - /usr/libexec/check-container
+            - --live
+          initialDelaySeconds: 120
+          timeoutSeconds: 10
+        name: postgresql
+        ports:
+        - containerPort: 5432
+          protocol: TCP
+        readinessProbe:
+          exec:
+            command:
+            - /usr/libexec/check-container
+          initialDelaySeconds: 5
+          timeoutSeconds: 1
+        resources:
+          limits:
+            memory: 512Mi
+        securityContext:
+          capabilities: {}
+          privileged: false
+        terminationMessagePath: /dev/termination-log
+        volumeMounts:
+        - mountPath: /var/lib/pgsql/data
+          name: postgresql-db-data
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      volumes:
+      - name: postgresql-db-data
+        persistentVolumeClaim:
+          claimName: postgresql-db
+  triggers:
+  - imageChangeParams:
+      automatic: true
+      containerNames:
+      - postgresql
+      from:
+        kind: ImageStreamTag
+        name: postgresql:10-el8
+        namespace: openshift
+      lastTriggeredImage: ""
+    type: ImageChange
+  - type: ConfigChange
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: ServiceBinding
+metadata:
+  name: backend-servicebinding
+spec:
+  application:
+    group: apps
+    resource: deployments
+    name: backend
+    version: v1
+  services:
+    - group: apps.openshift.io
+      version: v1
+      kind: DeploymentConfig
+      name: postgresql-db
+      id: database
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: ServiceBinding
+metadata:
+  name: backend-servicebinding
+spec:
+  application:
+    group: apps
+    resource: deployments
+    name: backend
+    version: v1
+  services:
+    - group: ""
+      version: v1
+      kind: Service
+      name: postgresql-db
+      id: database

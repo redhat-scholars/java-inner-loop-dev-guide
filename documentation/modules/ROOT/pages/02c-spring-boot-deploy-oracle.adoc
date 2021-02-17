@@ -1,0 +1,615 @@
+= Oracle as Database
+include::_attributes.adoc[]
+:database_name: oracle
+:project_name: %USERNAME%-{artifact_id}-{database_name}
+
+This time we're going to install Oracle in a different namespace to make it look as an external database.
+
+[#deploy-database]
+== Deploying Oracle on OCP
+
+NOTE: You need credentials in the link:https://container-registry.oracle.com/pls/apex/f?p=113:1:113820723533011:::1:P1_BUSINESS_AREA:3:[Oracle Container Registry] in order to download Oracle DB images.
+
+WARNING: You may need to delete/adjust Limit Ranges in `$\{ORACLE_DB_PROJECT_NAME}` project because the deployment object will request 4Gi.
+
+Please run these commands as cluster-admin to deploy Oracle DB:
+
+IMPORTANT: The OCI image to be downloaded is quite big, to grab a cup of coffee and keep calm.
+
+.Create a project to deploy Oracle DB
+[.console-input]
+[source,bash,options="nowrap",subs="attributes+"]
+----
+export ORACLE_DB_PROJECT_NAME=oracle-db-prj
+oc new-project $\{ORACLE_DB_PROJECT_NAME}
+----
+
+.Adjust permissions
+[.console-input]
+[source,bash,options="nowrap",subs="attributes+"]
+----
+oc adm policy add-scc-to-user privileged -z default -n $\{ORACLE_DB_PROJECT_NAME} && \
+  oc adm policy add-scc-to-user anyuid -z default -n $\{ORACLE_DB_PROJECT_NAME}
+----
+
+.Type in your user/email in the Oracle Container Regisry
+[.console-input]
+[source,bash,options="nowrap",subs="attributes+"]
+----
+echo -n "Reg. Email: " && read email
+echo -n "Reg. Password: " && read -s password
+----
+
+.Create a pull secret for the Oracle Container Registry
+[.console-input]
+[source,bash,options="nowrap",subs="attributes+"]
+----
+oc create secret docker-registry oracle-registry \
+  --docker-server=container-registry.oracle.com \
+  --docker-username=$\{email} \
+  --docker-password=$\{password} \
+  --docker-email=$\{email} -n $\{ORACLE_DB_PROJECT_NAME}
+----
+
+.Finally deploy Oracle DB
+[.console-input]
+[source,bash,options="nowrap",subs="attributes+"]
+----
+oc apply -f ./k8s/oracle-db.yaml -n $\{ORACLE_DB_PROJECT_NAME}
+----
+
+NOTE: Once the container is running again be calm, after starting the DB daemon data needs to be copied. In total it could take more than 10 mins.
+
+To have a look to the logs do this.
+[.console-input]
+[source,bash,options="nowrap",subs="attributes+"]
+----
+oc logs -f $(oc get pods -o json | jq -r '.items[] | select(.metadata.name | test("oracle-db")).metadata.name') -n $\{ORACLE_DB_PROJECT_NAME}
+----
+
+If you see this you're on your way to get it working.
+[.console-output]
+[source,bash,options="nowrap",subs="attributes+"]
+----
+[2021:01:25 16:50:34]: Acquiring lock on /opt/oracle/oradata/.ORCL.create_lck
+[2021:01:25 16:50:34]: Lock acquired on /opt/oracle/oradata/.ORCL.create_lck
+[2021:01:25 16:50:34]: Holding on to the lock using /tmp/.ORCL.create_lck
+ORACLE EDITION: ENTERPRISE
+ORACLE PASSWORD FOR SYS, SYSTEM AND PDBADMIN: ******
+
+LSNRCTL for Linux: Version 19.0.0.0.0 - Production on 25-JAN-2021 16:50:34
+
+Copyright (c) 1991, 2019, Oracle.  All rights reserved.
+
+Starting /opt/oracle/product/19c/dbhome_1/bin/tnslsnr: please wait...
+
+TNSLSNR for Linux: Version 19.0.0.0.0 - Production
+System parameter file is /opt/oracle/product/19c/dbhome_1/network/admin/listener.ora
+Log messages written to /opt/oracle/diag/tnslsnr/oracle-db-5999c5bd66-x9t9h/listener/alert/log.xml
+Listening on: (DESCRIPTION=(ADDRESS=(PROTOCOL=ipc)(KEY=EXTPROC1)))
+Listening on: (DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=0.0.0.0)(PORT=1521)))
+
+Connecting to (DESCRIPTION=(ADDRESS=(PROTOCOL=IPC)(KEY=EXTPROC1)))
+STATUS of the LISTENER
+------------------------
+Alias                     LISTENER
+Version                   TNSLSNR for Linux: Version 19.0.0.0.0 - Production
+Start Date                25-JAN-2021 16:50:34
+Uptime                    0 days 0 hr. 0 min. 0 sec
+Trace Level               off
+Security                  ON: Local OS Authentication
+SNMP                      OFF
+Listener Parameter File   /opt/oracle/product/19c/dbhome_1/network/admin/listener.ora
+Listener Log File         /opt/oracle/diag/tnslsnr/oracle-db-5999c5bd66-x9t9h/listener/alert/log.xml
+Listening Endpoints Summary...
+  (DESCRIPTION=(ADDRESS=(PROTOCOL=ipc)(KEY=EXTPROC1)))
+  (DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=0.0.0.0)(PORT=1521)))
+The listener supports no services
+The command completed successfully
+Prepare for db operation
+8% complete
+Copying database files
+31% complete
+Creating and starting Oracle instance
+32% complete
+36% complete
+40% complete
+43% complete
+46% complete
+Completing Database Creation
+----
+
+Now wait until the database has been initialized, you should see this.
+
+[.console-output]
+[source,bash,options="nowrap",subs="attributes+"]
+----
+...
+
+The Oracle base remains unchanged with value /opt/oracle
+#########################
+DATABASE IS READY TO USE!
+#########################
+
+Executing user defined scripts
+/opt/oracle/runUserScripts.sh: ignoring /opt/oracle/scripts/startup/lost+found
+
+DONE: Executing user defined scripts
+
+The following output is now a tail of the alert.log:
+ORCLPDB1(3):
+ORCLPDB1(3):XDB initialized.
+2021-01-25T17:05:21.301744+00:00
+ALTER SYSTEM SET control_files='/opt/oracle/oradata/ORCL/control01.ctl' SCOPE=SPFILE;
+2021-01-25T17:05:21.307239+00:00
+ALTER SYSTEM SET local_listener='' SCOPE=BOTH;
+   ALTER PLUGGABLE DATABASE ORCLPDB1 SAVE STATE
+Completed:    ALTER PLUGGABLE DATABASE ORCLPDB1 SAVE STATE
+
+XDB initialized.
+----
+
+So the database has been initialized, now we have to create a user in PDB `ORCLPDB1`.
+
+Let's connect to the container and run some commands in order to create the user/schema to hold our data in PDB `ORCLPDB1`:
+[.console-input]
+[source,bash,options="nowrap",subs="attributes+"]
+----
+oc project $\{ORACLE_DB_PROJECT_NAME}
+oc rsh $(oc get pods -o json | jq -r '.items[] | select(.metadata.name | test("oracle-db")).metadata.name')
+----
+
+Now that you're connected to the container run this command...
+
+NOTE: Prompt should look like this => `sh-4.2$`
+
+[.console-input]
+[source,bash,options="nowrap",subs="attributes+"]
+----
+sqlplus system/Kube#2020@localhost:1521/$\{ORACLE_PDB}
+----
+
+And this should be the output you get.
+
+[.console-output]
+[source,bash,options="nowrap",subs="attributes+"]
+----
+SQL*Plus: Release 19.0.0.0.0 - Production on Mon Jan 25 17:10:36 2021
+Version 19.3.0.0.0
+
+Copyright (c) 1982, 2019, Oracle.  All rights reserved.
+
+
+Connected to:
+Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+Version 19.3.0.0.0
+
+SQL> 
+----
+
+Then run these SQL statements in `sqlplus`:
+
+NOTE: Prompt shoud look like this => `SQL>`
+
+[.console-input]
+[source,bash,options="nowrap",subs="attributes+"]
+----
+create user luke identified by "secret";
+----
+
+And this is what you should get.
+
+[.console-output]
+[source,bash,options="nowrap",subs="attributes+"]
+----
+User created.
+----
+
+Let's grant the user with the required permissions:
+
+[.console-input]
+[source,bash,options="nowrap",subs="attributes+"]
+----
+grant CREATE SESSION, ALTER SESSION, CREATE DATABASE LINK, -
+  CREATE MATERIALIZED VIEW, CREATE PROCEDURE, CREATE PUBLIC SYNONYM, -
+  CREATE ROLE, CREATE SEQUENCE, CREATE SYNONYM, CREATE TABLE, - 
+  CREATE TRIGGER, CREATE TYPE, CREATE VIEW, UNLIMITED TABLESPACE -
+  to luke;
+----
+
+This is the expected output.
+
+[.console-output]
+[source,bash,options="nowrap",subs="attributes+"]
+----
+Grant succeeded.
+----
+
+Nice! You're Oracle DB is up and running, initialized and the DB Schema has been created. You can exit `sqplplus` and the container.
+
+[#deploy-code]
+== Deploying the code on OCP
+
+IMPORTANT: Now resume as a normal user, no need to be `cluster-admin` anymore.
+
+In order to run our application, we need a namespace, let's create one:
+[.console-input]
+[source,bash,options="nowrap",subs="attributes+"]
+----
+export PROJECT_NAME={project_name}
+oc new-project $\{PROJECT_NAME}
+----
+
+We want to connect to the Oracle DB as if it were external, so let'd create a Service using a external name:
+
+[.console-input]
+[source,bash,options="nowrap",subs="attributes+"]
+----
+cat <<EOF | oc apply -n $\{PROJECT_NAME} -f -
+apiVersion: v1
+kind: Service
+metadata:
+  name: oracle-db
+spec:
+  type: ExternalName
+  externalName: oracle-db.oracle-db-prj.svc.cluster.local
+EOF
+----
+
+NOTE: This is not the only way, you could create a service with no selector and point to an external but reacheable IP address, as in this example. We cannot use this apporach because the IP of our Oracle DB is internal and this is not allowed. Here you are an example.
+
+[source,yaml,options="nowrap",subs="attributes+"]
+----
+kind: Service
+apiVersion: v1
+metadata:
+ name: oracle-db
+spec:
+ type: ClusterIP
+ ports:
+ - port: 1521
+   targetPort: 1521
+---
+kind: Endpoints
+apiVersion: v1
+metadata:
+ name: oracle-db
+subsets:
+ - addresses:
+     - ip: $\{ORACLE_DB_SVC_IP}
+   ports:
+     - port: 1521
+EOF
+----
+
+Ok, time to deploy our oracle-flavoured application, please execute these commands:
+[.console-input]
+[source,bash,options="nowrap",subs="attributes+"]
+----
+oc project $\{PROJECT_NAME}
+mvn clean oc:deploy -Popenshift-oracle -DskipTests
+----
+
+Have a look to the expected output.
+
+[.console-output]
+[source,bash]
+----
+[INFO] Scanning for projects...
+...
+[INFO] 
+[INFO] -----------------< dev.snowdrop.example:fruit-service >-----------------
+[INFO] Building Spring Boot - CRUD Example 1.0.0
+[INFO] --------------------------------[ jar ]---------------------------------
+...
+[INFO] Copying 7 resources
+[INFO] Copying 1 resource to static
+[INFO] 
+[INFO] --- openshift-maven-plugin:1.1.0:resource (fmp) @ fruit-service ---
+[INFO] oc: Using docker image name of namespace: {artifact_id}-dev
+[INFO] oc: Running generator spring-boot
+[INFO] oc: spring-boot: Using Docker image quay.io/jkube/jkube-java-binary-s2i:0.0.9 as base / builder
+[INFO] oc: Using resource templates from /Users/cvicensa/Projects/openshift/redhat-scholars/java-inner-loop-dev-guide/src/main/jkube
+[INFO] oc: jkube-healthcheck-spring-boot: Adding readiness probe on port 8080, path='/actuator/health', scheme='HTTP', with initial delay 10 seconds
+[INFO] oc: jkube-healthcheck-spring-boot: Adding liveness probe on port 8080, path='/actuator/health', scheme='HTTP', with initial delay 180 seconds
+[INFO] oc: jkube-service-discovery: Using first mentioned service port '8080' 
+[INFO] oc: jkube-revision-history: Adding revision history limit to 2
+[INFO] 
+...
+[INFO] --- openshift-maven-plugin:1.1.0:build (fmp) @ fruit-service ---
+[INFO] oc: Using OpenShift build with strategy S2I
+[INFO] oc: Running in OpenShift mode
+[INFO] oc: Running generator spring-boot
+[INFO] oc: spring-boot: Using Docker image quay.io/jkube/jkube-java-binary-s2i:0.0.9 as base / builder
+[INFO] oc: [fruit-service:1.0.0] "spring-boot": Created docker source tar /Users/cvicensa/Projects/openshift/redhat-scholars/java-inner-loop-dev-guide/target/docker/fruit-service/1.0.0/tmp/docker-build.tar
+[INFO] oc: Creating Secret
+[INFO] oc: Updating BuildServiceConfig fruit-service-s2i for Source strategy
+[INFO] oc: Adding to ImageStream fruit-service
+[INFO] oc: Starting Build fruit-service-s2i
+[INFO] oc: Waiting for build fruit-service-s2i-5 to complete...
+[INFO] oc: Caching blobs under "/var/cache/blobs".
+[INFO] oc: Getting image source signatures
+[INFO] oc: Copying blob sha256:a6b97b4963f5ace479dbf5bdc821bdb757de2aef502a39a19b236856827250d0
+[INFO] oc: Copying blob sha256:13948a011eecd34fe31551e2e072246169350e27314e5f84b94508c0f848ae7e
+[INFO] oc: Copying blob sha256:ccd8aed47e111ef230e879b3773d55df509f7ee7f329d0bb131190d7493f04ba
+[INFO] oc: Copying config sha256:910caf82544b3f0254b67200c1a1e441631884d530a6d292e9fef1216ef66051
+[INFO] oc: Writing manifest to image destination
+[INFO] oc: Storing signatures
+[INFO] oc: Generating dockerfile with builder image quay.io/jkube/jkube-java-binary-s2i:0.0.9
+[INFO] oc: STEP 1: FROM quay.io/jkube/jkube-java-binary-s2i:0.0.9
+...
+[INFO] oc: INFO S2I source build with plain binaries detected
+[INFO] oc: INFO S2I binary build from fabric8-maven-plugin detected
+[INFO] oc: INFO Copying binaries from /tmp/src/deployments to /deployments ...
+[INFO] oc: fruit-service-1.0.0.jar
+[INFO] oc: INFO Copying deployments from deployments to /deployments...
+[INFO] oc: '/tmp/src/deployments/fruit-service-1.0.0.jar' -> '/deployments/fruit-service-1.0.0.jar'
+[INFO] oc: INFO Cleaning up source directory (/tmp/src)
+[INFO] oc: STEP 9: CMD /usr/local/s2i/run
+[INFO] oc: STEP 10: COMMIT temp.builder.openshift.io/{artifact_id}-dev/fruit-service-s2i-5:d7248b5b
+...
+[INFO] oc: 
+[INFO] oc: Pushing image image-registry.openshift-image-registry.svc:5000/{artifact_id}-dev/fruit-service:1.0.0 ...
+...
+[INFO] oc: Successfully pushed image-registry.openshift-image-registry.svc:5000/{artifact_id}-dev/fruit-service@sha256:8e12d974c41953f19f6a769bde8dc19898aabce7038025d442de825c7102b7b1
+[INFO] oc: Push successful
+...
+[INFO] <<< openshift-maven-plugin:1.1.0:deploy (default-cli) < install @ fruit-service <<<
+[INFO] 
+[INFO] 
+[INFO] --- openshift-maven-plugin:1.1.0:deploy (default-cli) @ fruit-service ---
+[INFO] oc: Using OpenShift at https://api.cluster-2036.2036.example.opentlc.com:6443/ in namespace {artifact_id}-dev with manifest /Users/cvicensa/Projects/openshift/redhat-scholars/java-inner-loop-dev-guide/target/classes/META-INF/jkube/openshift.yml 
+[INFO] oc: OpenShift platform detected
+[INFO] oc: Using project: {artifact_id}-dev
+[INFO] oc: Creating a Secret from openshift.yml namespace {artifact_id}-dev name fruit-service-postgresql-db
+[INFO] oc: Created Secret: target/jkube/applyJson/{artifact_id}-dev/secret-fruit-service-postgresql-db.json
+[INFO] oc: Updating Service from openshift.yml
+[INFO] oc: Updated Service: target/jkube/applyJson/{artifact_id}-dev/service-fruit-service.json
+[INFO] oc: Creating a ConfigMap from openshift.yml namespace {artifact_id}-dev name fruit-service-postgresql-configmap
+[INFO] oc: Created ConfigMap: target/jkube/applyJson/{artifact_id}-dev/configmap-fruit-service-postgresql-configmap.json
+[INFO] oc: Creating a DeploymentConfig from openshift.yml namespace {artifact_id}-dev name fruit-service
+[INFO] oc: Created DeploymentConfig: target/jkube/applyJson/{artifact_id}-dev/deploymentconfig-fruit-service.json
+[INFO] oc: Updating Route from openshift.yml
+[INFO] oc: Updated Route: target/jkube/applyJson/{artifact_id}-dev/route-fruit-service.json
+[INFO] oc: HINT: Use the command `oc get pods -w` to watch your pods start up
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  01:25 min
+[INFO] Finished at: 2021-02-01T08:32:17+01:00
+[INFO] ------------------------------------------------------------------------
+----
+
+Move to the OpenShift web console and from `Topology` in the `Developer` perspective click on the route link as in the picture.
+
+image::fruit-service-oracle-topology.png[Fruit Service on Oracle Topology]
+
+You should see this.
+
+image::fruit-service-oracle-display.png[Fruit Service on Oracle Topology]
+
+[#run-local-telepresence]
+== Extending the inner-loop with Telepresence
+
+.Permissions needed
+[IMPORTANT]
+===============================
+This needs to be run by a `cluster-admin`
+
+[.console-input]
+[source,bash,options="nowrap",subs="verbatim,attributes+"]
+----
+oc adm policy add-scc-to-user privileged -z default -n $\{PROJECT_NAME}
+oc adm policy add-scc-to-user anyuid -z default -n $\{PROJECT_NAME}
+----
+===============================
+
+NOTE: Telepresence will modify the network so that Services in Kubernetes are reachable from your laptop and viceversa. 
+
+The next command will result in the deployment for our application being scaled down to zero and the network altered so that traffic to it ends up in your laptop in port `8080`.
+
+IMPORTANT: You'll be asked for `sudo` password, this is normal, telepresence needs to be able to modify networking rules so that you can see Kubernetes Services as local.
+
+[.console-input]
+[source,bash,options="nowrap",subs="attributes+"]
+----
+export TELEPRESENCE_USE_OCP_IMAGE=NO
+oc project $\{PROJECT_NAME}
+telepresence --swap-deployment {artifact_id} --expose 8080
+----
+
+Evetually you'll se something like this:
+
+[.console-output]
+[source,text,options="nowrap",subs="attributes+"]
+----
+...
+T: Forwarding remote port 9779 to local port 9779.
+T: Forwarding remote port 8080 to local port 8080.
+T: Forwarding remote port 8778 to local port 8778.
+
+T: Guessing that Services IP range is ['172.30.0.0/16']. Services started after this point will be inaccessible if are outside this range; restart telepresence 
+T: if you can't access a new Service.
+T: Connected. Flushing DNS cache.
+T: Setup complete. Launching your command.
+
+The default interactive shell is now zsh.
+To update your account to use zsh, please run `chsh -s /bin/zsh`.
+For more details, please visit https://support.apple.com/kb/HT208050.
+@{artifact_id}-oracle-dev/api-cluster-5555-5555-acme-com:6443/user1|bash-3.2$
+----
+
+[TIP]
+===============================
+Run from another terminal:
+[.console-input]
+[source,bash,options="nowrap",subs="attributes+"]
+----
+curl http://oracle-db:1521
+----
+
+You should receive which looks bad but it's actually good, this means that the DNS Service name local to Kubernetes can be resolved from your computer and that the port `1521` has been reached!
+[.console-output]
+[source,bash,options="nowrap",subs="attributes+"]
+----
+curl: (52) Empty reply from server` 
+----
+===============================
+
+Now from another terminal:
+[.console-input]
+[source,bash,options="nowrap",subs="attributes+"]
+----
+export PROJECT_NAME={project_name}
+SERVICE_DB_USER=luke SERVICE_DB_PASSWORD=secret SERVICE_DB_NAME=FRUITSDB SERVICE_DB_HOST=oracle-db \
+  mvn clean spring-boot:run -Dspring-boot.run.profiles=openshift-oracle -Popenshift-oracle
+----
+
+Now open a browser and point to link:http://localhost:8080:[http://localhost:8080]
+
+You should see this:
+
+TIP: You can edit, save, delete to test the functionalities implemented by `FruitController`
+
+image::fruit-service-oracle-display.png[Fruit Service on PostgreSQL]
+
+[#binary-deploy]
+== Binary deploy S2I
+
+Finally, imagine that after debugging your code locally you want to redeploy on OpenShift in a similar way but without using the JKube extension. This is possible because JKube is leveraging Source to Image (S2I) let's have a look to the `BuildConfigs` in our project.
+
+Let's do this.
+[.console-input]
+[source,bash,options="nowrap",subs="attributes+"]
+----
+oc get bc -n $\{PROJECT_NAME}
+----
+
+And you should get this.
+[.console-output]
+[source,bash,options="nowrap",subs="attributes+"]
+----
+NAME                TYPE     FROM     LATEST
+{artifact_id}-s2i   Source   Binary   2
+----
+
+Let's read some details:
+[.console-input]
+[source,bash,options="nowrap",subs="attributes+"]
+----
+oc get bc/{artifact_id}-s2i -o yaml -n $\{PROJECT_NAME}
+----
+
+And you should get this. We have deleted transient or obvious data to focus on the important part of the YAML.
+
+NOTE: Focus on `spec->source->type` => `Binary` this means that in order to build image `spec->output->to->name` you need to provide a binary file, a `JAR` file in this case.
+
+[.console-output]
+[source,yaml,options="nowrap",subs="attributes+"]
+----
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  labels:
+    app: {artifact_id}
+    group: dev.snowdrop.example
+    provider: jkube
+    version: 1.0.0
+  name: {artifact_id}-s2i
+  namespace: {artifact_id}-oracle-dev
+  ...
+spec:
+  failedBuildsHistoryLimit: 5
+  nodeSelector: null
+  output:
+    to:
+      kind: ImageStreamTag
+      name: {artifact_id}:1.0.0
+  postCommit: {}
+  resources: {}
+  runPolicy: Serial
+  source:
+    binary: {}
+    type: Binary
+  strategy:
+    sourceStrategy:
+      from:
+        kind: DockerImage
+        name: registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift:latest
+    type: Source
+  successfulBuildsHistoryLimit: 5
+status:
+...
+----
+
+Let's package our application with the right profile and build an image with it:
+[.console-input]
+[source,bash,options="nowrap",subs="attributes+"]
+----
+mvn clean package -Popenshift-oracle
+----
+
+After a successful build, let's start the build of the image in OpenShift:
+[.console-input]
+[source,bash,options="nowrap",subs="attributes+"]
+----
+oc start-build {artifact_id}-s2i --from-file=./target/{artifact_id}-1.0.0.jar -n $\{PROJECT_NAME}
+----
+
+As you can see in the output the `JAR` file is uploaded and a new Build is started.
+[.console-output]
+[source,bash,options="nowrap",subs="attributes+"]
+----
+Uploading file "target/{artifact_id}-1.0.0.jar" as binary input for the build ...
+...
+Uploading finished
+build.build.openshift.io/{artifact_id}-s2i-3 started
+----
+
+And let's have a look to the logs while the build is happening:
+[.console-input]
+[source,bash,options="nowrap",subs="attributes+"]
+----
+oc logs -f bc/{artifact_id}-s2i -n $\{PROJECT_NAME}
+----
+
+Log output from the current build (only relevant lines):
+
+NOTE: It all starts with `Receiving source from STDIN as file {artifact_id}-1.0.0.jar` so the image is built from a binary file within OpenShift as we checked out before.
+
+[.console-output]
+[source,bash,options="nowrap",subs="attributes+"]
+----
+Receiving source from STDIN as file {artifact_id}-1.0.0.jar
+Caching blobs under "/var/cache/blobs".
+Getting image source signatures
+...
+Writing manifest to image destination
+Storing signatures
+Generating dockerfile with builder image registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift:latest
+STEP 1: FROM registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift:latest
+STEP 2: LABEL "io.openshift.build.source-location"="/tmp/build/inputs"       "io.openshift.s2i.destination"="/tmp"       "io.openshift.build.image"="registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift:latest"
+STEP 3: ENV OPENSHIFT_BUILD_NAME="{artifact_id}-s2i-3"     OPENSHIFT_BUILD_NAMESPACE="{artifact_id}-postgresql-dev"
+STEP 4: USER root
+STEP 5: COPY upload/src /tmp/src
+STEP 6: RUN chown -R 185:0 /tmp/src
+STEP 7: USER 185
+STEP 8: RUN /usr/local/s2i/assemble
+INFO S2I source build with plain binaries detected
+INFO Copying binaries from /tmp/src to /deployments ...
+{artifact_id}-1.0.0.jar
+STEP 9: CMD /usr/local/s2i/run
+STEP 10: COMMIT temp.builder.openshift.io/{artifact_id}-postgresql-dev/{artifact_id}-s2i-3:5b6ab412
+Getting image source signatures
+...
+Writing manifest to image destination
+Storing signatures
+--> 56ea06fd4ac
+56ea06fd4ac030f9d3356a917c6a31aaa791d6fff000852a4e87eedbf06432ad
+
+Pushing image image-registry.openshift-image-registry.svc:5000/{artifact_id}-postgresql-dev/{artifact_id}:1.0.0 ...
+Getting image source signatures
+...
+Successfully pushed image-registry.openshift-image-registry.svc:5000/{artifact_id}-postgresql-dev/{artifact_id}@sha256:ae0a508200be22c45f3af7d5cd7f7ad32351f480f50b15bc9ad71b76fb37fa54
+Push successful
+----

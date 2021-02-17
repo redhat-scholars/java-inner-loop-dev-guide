@@ -1,5 +1,5 @@
-name: template-tutorial
-title: Template Tutorial
+name: java-inner-loop-dev-guide
+title: Java Inner-Loop Dev
 version: master
 nav:
   - modules/ROOT/nav.adoc

@@ -1,0 +1,296 @@
+= Quarkus Inner-loop
+include::_attributes.adoc[]
+
+[#the-code]
+== The code
+
+Our simple application exposes a CRUD interface for a table (`FRUIT`) in a relational database by using JPA and Hiebernate as the `ORM` framework. To do so, it uses JPA annotations like `@Entity`, `@Id`, etc. You can find the Java code of the JPA entity below.
+
+[NOTE]
+===============================
+In order to make the code more portable we have annotated the `id` attribute so that the value is generated using a sequence named `FRUIT_SEQ`. Our `@Entity` extends `PanacheEntityBase` to be override the *by default* ID generation mechanism.
+Note how simplified the code is, the only method there is a custom query `getAllFruitsForSeason`, all the usual CRUD functions are implemented in `PanacheEntityBase`.
+===============================
+
+[.lines_7]
+[.console-input]
+[source, java]
+----
+@Entity
+public class Fruit extends PanacheEntityBase {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "FruitSequence")
+    @SequenceGenerator(name = "FruitSequence", sequenceName = "FRUIT_SEQ")
+    public Integer id;
+    public String name;
+    public String season;
+
+    public static List<Fruit> getAllFruitsForSeason(String season) {
+        return find("season", season).list();
+    }
+}
+----
+
+The actual `REST` service is implemented in class `FruitResource` find below a simplified version of the code. Nothing complicated here, just using the inherited methods of the `Fruit` entity si enough.
+
+[.lines_7]
+[.console-input]
+[source, java]
+----
+@Path("/fruit")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
+public class FruitResource {
+    Logger logger = Logger.getLogger(FruitResource.class);
+
+    @ConfigProperty(name = "hello.message")
+    String message;
+    
+    @GET
+    @Path("hello")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String hello() {
+        logger.debug("Hello method is called with message: " + this.message); // logging & custom property
+        return message; // custom property
+    }
+    
+    @GET
+    public List<Fruit> allFruits() {
+        return Fruit.listAll(); 
+    }
+
+    @GET
+    @Path("{season}")
+    public List<Fruit> fruitsBySeason(@PathParam("season") String season) {
+        return Fruit.getAllFruitsForSeason(season);
+    }
+
+    @POST
+    @Transactional
+    public Response saveFruit(Fruit fruit) {
+        // since the FruitEntity is a panache entity
+        // persist is available by default
+        fruit.persist();
+        final URI createdUri = UriBuilder.fromResource(FruitResource.class)
+                        .path(Long.toString(fruit.id))
+                        .build();
+        return Response.created(createdUri).build();
+    }
+}
+----
+
+[#getting-the-code]
+== Getting the Code
+
+Time to get our hands dirty. Clone or download the code, your choice.
+
+[tabs]
+====
+Clone the code::
++
+[.console-input]
+[source,bash,subs="attributes+"]
+--
+git clone --single-branch --branch {git_ref} {git_base}/{git_uri}.git
+--
+Download the code::
++
+[.console-input]
+[source,bash,subs="attributes+"]
+--
+curl -L {git_base}/{git_uri}/archive/{git_ref}.zip -o {git_uri}.zip
+unzip {git_uri}.zip
+mv {git_uri}-{git_ref} {git_uri}
+--
+====
+
+Change to the dir where the code is.
+
+[.console-input]
+[source,bash,subs="attributes+"]
+--
+cd {git_uri}/apps/quarkus-app
+--
+
+[#quarkus-profiles]
+== Quarkus Profiles [TODO!!!!]
+
+As we stated at the begging we want to use different databases, *H2* to develop quickcly then either *PostgreSQL* or *Oracle* once the code is deployed in OpenShift. In order to do so we have defined 3 profiles:
+
+* *local* for H2
+* *openshift-postgresql* for PostgreSQL
+* *openshift-oracle* for Oracle
+
+[tabs]
+====
+local::
++
+[.console-input]
+[source,properties,subs="attributes+"]
+--
+# H2 settings
+spring.datasource.url=jdbc:h2:mem:testdb
+spring.datasource.driverClassName=org.h2.Driver
+spring.datasource.driver-class-name=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=password
+spring.datasource.platform=h2
+
+spring.jpa.properties.hibernate.hbm2ddl.import_files=import-h2.sql
+spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+spring.jpa.hibernate.ddl-auto=create
+--
+openshift-postgresql::
++
+[.console-input]
+[source,properties,subs="attributes+"]
+--
+# PostgreSQL settings
+spring.datasource.url=jdbc:postgresql://$\{SERVICE_DB_HOST}:5432/$\{SERVICE_DB_NAME}
+spring.datasource.username=$\{SERVICE_DB_USER}
+spring.datasource.password=$\{SERVICE_DB_PASSWORD}
+spring.datasource.driver-class-name=org.postgresql.Driver
+spring.datasource.platform=postgresql
+
+spring.jpa.properties.hibernate.hbm2ddl.import_files=import-postgresql.sql
+spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.hibernate.ddl-auto=create
+
+## To avoid CLOB related error...
+spring.jpa.properties.hibernate.jdbc.lob.non_contextual_creation=true
+--
+openshift-oracle::
++
+[.console-input]
+[source,properties,subs="attributes+"]
+--
+# Oracle settings
+spring.datasource.url=jdbc:oracle:thin:@$\{SERVICE_DB_HOST}:1521/$\{SERVICE_DB_NAME}
+spring.datasource.username=$\{SERVICE_DB_USER}
+spring.datasource.password=$\{SERVICE_DB_PASSWORD}
+spring.datasource.driver.class=oracle.jdbc.driver.OracleDriver
+spring.datasource.platform=oracle
+
+spring.jpa.properties.hibernate.hbm2ddl.import_files=import-oracle.sql
+spring.jpa.database-platform=org.hibernate.dialect.Oracle12cDialect
+spring.jpa.hibernate.ddl-auto=create
+--
+====
+
+There are accordingly 3 different `import.sql` files, basically the motivation is the different way of refering to the next value of a database sequence.
+
+[tabs]
+====
+import-h2.sql::
++
+[.console-input]
+[source,properties,subs="attributes+"]
+--
+insert into fruit (id, name) values (FRUIT_SEQ.NEXTVAL, 'Cherry');
+insert into fruit (id, name) values (FRUIT_SEQ.NEXTVAL, 'Apple');
+insert into fruit (id, name) values (FRUIT_SEQ.NEXTVAL, 'Banana');
+--
+import-postgresql.sql::
++
+[.console-input]
+[source,properties,subs="attributes+"]
+--
+insert into fruit (id, name) values ( nextval ('FRUIT_SEQ'), 'Cherry');
+insert into fruit (id, name) values ( nextval ('FRUIT_SEQ'), 'Apple');
+insert into fruit (id, name) values ( nextval ('FRUIT_SEQ'), 'Banana');
+--
+import-oracle.sql::
++
+[.console-input]
+[source,properties,subs="attributes+"]
+--
+insert into fruit (id, name) values (FRUIT_SEQ.NEXTVAL, 'Cherry');
+insert into fruit (id, name) values (FRUIT_SEQ.NEXTVAL, 'Apple');
+insert into fruit (id, name) values (FRUIT_SEQ.NEXTVAL, 'Banana');
+--
+====
+
+[#run-local]
+== Running the code locally against H2
+
+One decision made for this example was to keep it as SQL-standard as possible so that we can move to different database as esasily as possible. I know, some times this is not possible or ideal... but it's ok for this example.
+
+As we have said before in this guide you'll not have to code, instead we'll focus on running, testing, deploying, etc.
+
+Let's get started and see if the code works locally and using H2.
+
+NOTE: With `mvn quarkus:dev` we're starting Quarkus in `dev` mode, this means `%dev` profile is active and also that live code reloading is active.
+
+[.console-input]
+[source,bash,options="nowrap",subs="attributes+"]
+----
+mvn quarkus:dev
+----
+
+You should get this output.
+
+[TIP]
+===============================
+Note all the `Hibernate` traces like `drop table if exists Fruit CASCADE`  and also pay attention to the profile in use => *Profile `dev` activated. `Live Coding` activated*. 
+===============================
+
+[.console-output]
+[source,bash,subs="attributes+"]
+----
+...
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 5 resources
+[INFO] Nothing to compile - all classes are up to date
+Listening for transport dt_socket at address: 5005
+[INFO] Checking for existing resources in: /Users/redhat-scholars/java-inner-loop-dev-guide/apps/quarkus-app/src/main/kubernetes.
+[INFO] Adding existing Secret with name: fruits-db.
+Hibernate: 
+    
+    drop table if exists Fruit CASCADE 
+Hibernate: 
+    
+    drop sequence if exists FRUIT_SEQ
+Hibernate: create sequence FRUIT_SEQ start with 1 increment by 50
+Hibernate: 
+    
+    create table Fruit (
+       id integer not null,
+        name varchar(255),
+        season varchar(255),
+        primary key (id)
+    )
+Hibernate: 
+    insert into fruit (id,name,season) VALUES ( FRUIT_SEQ.NEXTVAL , 'Mango'      , 'Spring' )
+Hibernate: 
+    insert into fruit (id,name,season) VALUES ( FRUIT_SEQ.NEXTVAL , 'Strawberry' , 'Spring' )
+Hibernate: 
+    insert into fruit (id,name,season) VALUES ( FRUIT_SEQ.NEXTVAL , 'Orange'     , 'Winter' )
+Hibernate: 
+    insert into fruit (id,name,season) VALUES ( FRUIT_SEQ.NEXTVAL , 'GrapeFruit' , 'Winter' )
+Hibernate: 
+    insert into fruit (id,name,season) VALUES ( FRUIT_SEQ.NEXTVAL , 'Blueberry'  , 'Summer' )
+Hibernate: 
+    insert into fruit (id,name,season) VALUES ( FRUIT_SEQ.NEXTVAL , 'Banana'     , 'Summer' )
+Hibernate: 
+    insert into fruit (id,name,season) VALUES ( FRUIT_SEQ.NEXTVAL , 'Plum'       , 'Summer' )
+Hibernate: 
+    insert into fruit (id,name,season) VALUES ( FRUIT_SEQ.NEXTVAL , 'Apple'      , 'Fall'   )
+Hibernate: 
+    insert into fruit (id,name,season) VALUES ( FRUIT_SEQ.NEXTVAL , 'Grape '     , 'Fall'   )
+__  ____  __  _____   ___  __ ____  ______ 
+ --/ __ \/ / / / _ | / _ \/ //_/ / / / __/ 
+ -/ /_/ / /_/ / __ |/ , _/ ,< / /_/ /\ \   
+--\___\_\____/_/ |_/_/|_/_/|_|\____/___/   
+2021-02-08 16:50:38,565 INFO  [io.quarkus] (Quarkus Main Thread) atomic-fruit-service 1.0-SNAPSHOT on JVM (powered by Quarkus 1.9.2.Final) started in 3.348s. Listening on: http://0.0.0.0:8080
+2021-02-08 16:50:38,573 INFO  [io.quarkus] (Quarkus Main Thread) Profile dev activated. Live Coding activated.
+2021-02-08 16:50:38,573 INFO  [io.quarkus] (Quarkus Main Thread) Installed features: [agroal, cdi, hibernate-orm, hibernate-orm-panache, jdbc-h2, jdbc-postgresql, kubernetes, mutiny, narayana-jta, resteasy, resteasy-jsonb, smallrye-context-propagation, smallrye-health, smallrye-openapi, swagger-ui]
+----
+
+Now open a browser and point to link:http://localhost:8080:[http://localhost:8080]
+
+You should see this:
+
+TIP: You can edit, save, delete to test the functionalities implemented by `FruitResource`
+
+image::fruit-service-h2-display-quarkus.png[Fruit Service on H2 - Quarkus]
+

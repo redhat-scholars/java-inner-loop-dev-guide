@@ -1,0 +1,18 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: ${project.artifactId}
+  labels:
+    app: ${project.artifactId}
+    monitored: prometheus
+    expose: 'true'
+spec:
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+  selector:
+    app: ${project.artifactId}
+  type: ClusterIP
+  sessionAffinity: None

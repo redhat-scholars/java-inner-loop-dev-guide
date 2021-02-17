@@ -1,43 +1,28 @@
-target/
-!.mvn/wrapper/maven-wrapper.jar
-audit.log
-.cache/
-*.log
-
-docs/
-gh-pages/
-dependency-reduced-pom.xml
-svm.jar
-
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-
-### IntelliJ IDEA ###
+# IntelliJ
 .idea
-*.iws
 *.iml
-*.ipr
+target
 
-### NetBeans ###
-nbproject/private/
-build/
-nbbuild/
-dist/
-nbdist/
-.nb-gradle/
+# Eclipse
+.metadata
+.settings
+.classpath
+.project
+bin
+tmp
 
-.DS_Store
+old/
+
+# VS Code
 .vscode
-istio-1.1.1
-firebase*
-yarn*
-package*
-!package.json
+
+# Other
+.DS_Store
 node_modules
-.firebaserc
-.firebase
+*.log
+*-lock.json
+
+# Build
+gh-pages
+build
+.cache
