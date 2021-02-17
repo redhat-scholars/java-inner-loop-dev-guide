@@ -10,17 +10,17 @@ content:
   sources:
     - url: git@github.com:redhat-scholars/java-inner-loop-dev-guide.git
       tags: []
-      branches: [main]
+      branches: [master]
       start_path: documentation
 
 asciidoc:
   attributes:
-    release-version: main
+    release-version: master
     page-pagination: true
     #title: Java Inner Loop Dev Guide
     git_base: https://github.com/redhat-scholars 
     git_uri: java-inner-loop-dev-guide
-    git_ref: main
+    git_ref: master
   extensions:
     - ./lib/tab-block.js
     - ./lib/remote-include-processor.js
