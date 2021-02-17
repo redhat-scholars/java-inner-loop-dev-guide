@@ -1,6 +1,6 @@
 # Contributing Guide
 
-The sources of this tutorial docs is in https://github.com/redhat-scholars/openshift-starter-guides/tree/master/documentation[documentation] folder.
+The sources of this tutorial docs is in https://github.com/redhat-scholars/java-inner-loop-dev-guide/tree/master/documentation[documentation] folder.
 The site generation is done by https://docs.antora.org/[Antora]
 
 ## Running site in development mode
@@ -9,10 +9,10 @@ To run the site in development mode you need to have https://yarnpkg.com[yarn] o
 
 Clone this repository
 ```
-git clone https://github.com/redhat-scholars/openshift-starter-guides.git
+git clone https://github.com/redhat-scholars/java-inner-loop-dev-guide.git
 ```
 
-Run `yarn install` or `npm install` from the `openshift-starter-guides` repository to install needed nodejs packages.
+Run `yarn install` or `npm install` from the `java-inner-loop-dev-guide` repository to install needed nodejs packages.
 ```
 npm install
 ```
@@ -28,6 +28,6 @@ Making any changes to your local repositories above cloned earlier, will be auto
 
 Now you are all set:
 
-- Open an Issue in http://github.com/redhat-scholars/openshift-starter-guides.git
+- Open an Issue in http://github.com/redhat-scholars/java-inner-loop-dev-guide.git
 - Prepare your changes in the respective documentation repository
 - Send the PR to respective repositories listed above
