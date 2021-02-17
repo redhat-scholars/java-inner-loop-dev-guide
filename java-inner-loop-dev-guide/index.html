@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Overview :: Java Inner Loop Dev Guide</title>
+    <link rel="canonical" href="https://redhat-scholars.github.io/java-inner-loop-dev-guide/java-inner-loop-dev-guide/index.html">
+    <link rel="next" href="01-setup.html">
+    <meta name="generator" content="Antora 2.3.4">
+    <link rel="stylesheet" href="../_/css/site.css">
+<link rel="icon" href="../_/img/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://developers.redhat.com" target="_blank"><img
+          src="../_/img/header_logo.png" height="40px" alt="Red Hat Developer Program"></a>
+      <a class="navbar-item" href="https://redhat-scholars.github.io/java-inner-loop-dev-guide">Java Inner Loop Dev Guide</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Books</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">CheatSheets</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">CheatSheet A</a>
+            <a class="navbar-item" href="#">CheatSheet B</a>
+            <a class="navbar-item" href="#">CheatSheet C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Upcoming Events</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Event A</a>
+            <a class="navbar-item" href="#">Event B</a>
+            <a class="navbar-item" href="#">Event C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">More Tutorials</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Tutorial A</a>
+            <a class="navbar-item" href="#">Tutorial B</a>
+            <a class="navbar-item" href="#">Tutorial C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="java-inner-loop-dev-guide" data-version="master">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html">Java Inner-Loop Dev</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="01-setup.html">Setup</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="01-setup.html#prerequisite">Prerequisites</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="02a-spring-boot-common.html">Spring Boot Inner-Loop</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="02a-spring-boot-common.html#the-code">Common</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="02a-spring-boot-common.html#the-code">The code</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="02a-spring-boot-common.html#maven-profiles">Maven Profiles</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="02a-spring-boot-common.html#run-local">Running the code locally against H2</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="02b-spring-boot-deploy-postgresql.html">PostgreSQL as Database</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="02b-spring-boot-deploy-postgresql.html#deploy-database">Deploying PostgreSQL</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="02b-spring-boot-deploy-postgresql.html#deploy-code">Deploying the code</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="02b-spring-boot-deploy-postgresql.html#run-local-telepresence">Extending the inner-loop with Telepresence</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="02b-spring-boot-deploy-postgresql.html#binary-deploy">Binary deploy S2I</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="02c-spring-boot-deploy-oracle.html">Oracle as Database</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="02c-spring-boot-deploy-oracle.html#deploy-database">Deploying Oracle</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="02c-spring-boot-deploy-oracle.html#deploy-code">Deploying the code</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="02c-spring-boot-deploy-oracle.html#run-local-telepresence">Extending the inner-loop with Telepresence</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="02c-spring-boot-deploy-oracle.html#binary-deploy">Binary deploy S2I</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="03a-quarkus-common.html">Quarkus Inner-Loop</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="03a-quarkus-common.html#the-code">Common</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="03a-quarkus-common.html#the-code">The code</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="03a-quarkus-common.html#maven-profiles">Maven Profiles</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="03a-quarkus-common.html#run-local">Running the code locally against H2</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="03b-quarkus-deploy-postgresql.html">PostgreSQL as Database</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="03b-quarkus-deploy-postgresql.html#deploy-database">Deploying PostgreSQL</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="03b-quarkus-deploy-postgresql.html#deploy-code">Deploying the code</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="03b-quarkus-deploy-postgresql.html#run-local-telepresence">Extending the inner-loop with Telepresence</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="03b-quarkus-deploy-postgresql.html#run-local-remote-dev">Extending the inner-loop with remote development</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="03b-quarkus-deploy-postgresql.html#binary-deploy">Binary deploy S2I</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="03c-quarkus-deploy-oracle.html">Oracle as Database</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="03c-quarkus-deploy-oracle.html#deploy-database">Deploying Oracle</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="03c-quarkus-deploy-oracle.html#deploy-code">Deploying the code</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="03c-quarkus-deploy-oracle.html#run-local-telepresence">Extending the inner-loop with Telepresence</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="03c-quarkus-deploy-oracle.html#run-local-remote-dev">Extending the inner-loop with remote development</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="03c-quarkus-deploy-oracle.html#binary-deploy">Binary deploy S2I</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Java Inner-Loop Dev</span>
+    <span class="version">master</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">Java Inner-Loop Dev</span>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="index.html">master</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link is-current"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Java Inner-Loop Dev</a></li>
+    <li><a href="index.html">Overview</a></li>
+  </ul>
+</nav>
+  <div class="edit-this-page"><a href="https://github.com/redhat-scholars/java-inner-loop-dev-guide/edit/master/documentation/modules/ROOT/pages/index.adoc">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Overview</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Not that far away we were used to develop monolithic multitier applications where the main theme was:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>[UI &lt;-&gt; JavaEE &lt;-&gt; Database]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This has changed ever since we started to embrace Micro Services Architectures and specially with the advent of Kubernetes</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>"We have started to replace monoliths by sets of container-based microservices running in a<br>
+Kubernetes cluster"</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>In general we all aggree these distributed architectures have lots of benefits but also pose some challenges. Among these challanges we&#8217;d like to <strong>highlight here the problems a developer has to face when developing kubernetes native applications</strong>.</p>
+</div>
+<div class="paragraph">
+<p>The truth is that, even though you will evetually run your code inside a kubernetes cluster, you still develop (in general) locally where you have your IDE, compilers, etc. There are several ways to explain the development cycle, here you are an informal definition.</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>There are <strong>two loops</strong>, <strong>one closer</strong> to the developer <strong>inner-loop</strong>; <strong>where you code, test, debug iteratively</strong> and <strong>one further away</strong> the <strong>outer-loop</strong>; <strong>where your code runs inside a container image you have to build, push and deploy</strong> and&#8230;&#8203; that take a lot longer.</p>
+</div>
+</blockquote>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/inner-vs-outer-loop.png" alt="Inner vs Outer Loop">
+</div>
+<div class="title">Figure 1. Inner vs Outer "one more debug session nightmare"</div>
+</div>
+<div class="paragraph">
+<p>You may think&#8230;&#8203; I can "test it all" locally, then just push my code and the rest is history. Something like this.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/kubernetes-development-loop.png" alt="Kubernetes Native Development Loop">
+</div>
+<div class="title">Figure 2. Kubernetes Native Development Loop</div>
+</div>
+<div class="paragraph">
+<p>Well if this is your case&#8230;&#8203; then you may not need to continue BUT if you happen to need to connect to several services, databases, etc. then having "it-all" locally maybe it&#8217;s not an option, if that is the case stay!</p>
+</div>
+<div class="paragraph">
+<p>Well, the <strong>goal</strong> of this guide is simple <strong>exploring different approaches to help you with the inner-loop of the kubernetes native development workflow</strong>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="tldr"><a class="anchor" href="#tldr"></a>TL;DR</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>This tutorial will guide you to extend your Java Inner Loop so that it literally overlaps with your kubernetes cluster</strong>, something like this. You&#8217;ll find how to do this for <strong>Spring Boot</strong> and <strong>Quarkus</strong>. We will provide you with sample code and configurations for <strong>PostgreSQL</strong> and <strong>Oracle RDBMS</strong>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>This guide concentrates on Java but concepts and the approach involving Telepresence applies to any technology.</p>
+</li>
+<li>
+<p>The cases involving Oracle RDBMS explain how to deploy Oracle in an OpenShift cluster but once done they consider that database as external to the cluster.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/inner-vs-outer-loop-extended.png" alt="Inner extended to the kubernetes cluster">
+</div>
+<div class="title">Figure 3. Inner extended to the kubernetes cluster</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="the-challenge"><a class="anchor" href="#the-challenge"></a>The Challenge</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Given the distributed nature of nowdays applications <strong>developers find themselves dealing with a pletora of services they need to integrate with</strong> while developing. <strong>So the challenge seems to be that those services need to be at reach and sometimes this is not easy</strong>.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s review some of the approches you can take in order to mitigate this problem.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="approaches"><a class="anchor" href="#approaches"></a>Approaches To Mitigate The Problem</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Here are some approaches to reduce the problem:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Using <a href="https://docs.docker.com/compose/" target="_blank" rel="noopener">Docker Compose</a> and deploy all the services locally</p>
+</li>
+<li>
+<p>Using <a href="https://minikube.sigs.k8s.io/" target="_blank" rel="noopener">minikube</a>, <a href="https://kind.sigs.k8s.io/" target="_blank" rel="noopener">kind</a>, etc. and deploy all the services there</p>
+</li>
+<li>
+<p>Mocking up all the services you interact with</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>All these approaches are valid and plausible but some times they&#8217;re not the best way to go or just too complicated to maintain</strong>. For instance some times you need access to several services in different namespaces and you have to get all those with you in your local cluster&#8230;&#8203; other times some services are external and reachable only from the remote cluster&#8230;&#8203; and maybe mocking-up code is not your thing (or don&#8217;t have the skills or time to do it).</p>
+</div>
+<div class="paragraph">
+<p>This guide explores some alternatives to extend your local development environment (<strong>inner-loop</strong>) to the remote cluster for Java applications using two frameworks: Spring Boot and <a href="https://quarkus.io" target="_blank" rel="noopener">Quarkus</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="details"><a class="anchor" href="#details"></a>Details</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This tutorial provides you with a super-simple CRUD microservice (in two flavors: Spring Boot and <a href="https://quarkus.io" target="_blank" rel="noopener">Quarkus</a>), <strong><code>FruitService</code></strong>, that implements the usual functions: create, update, delete, find all, etc. mapped to a table in a releational database.</p>
+</div>
+<div class="paragraph">
+<p>No need to code this time, the Java code is simple, it works and we have tested it against, H2, PostgreSQL and Oracle RDBMS.</p>
+</div>
+<div class="paragraph">
+<div class="title">So what will you do in this tutorial?</div>
+<p>You will:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Deploy the code against PostgreSQL directly from the command line using the <a href="https://www.eclipse.org/jkube:">JKube</a> maven plugin</p>
+</li>
+<li>
+<p>You will also learn how JKube leverages Source to Image (<a href="https://docs.openshift.com/container-platform/4.6/builds/understanding-image-builds.html#builds-strategy-s2i-build_understanding-image-builds">S2I</a>) to speed up the process of building OCI images inside OpenShift.</p>
+</li>
+<li>
+<p>You&#8217;ll find out how to do the same for Quarkus but this time using the OpenShift plugin instead of JKube</p>
+</li>
+<li>
+<p>We will show you how to use <a href="https://telepresence.io:">Telepresence</a> to speed up development iterations.</p>
+</li>
+<li>
+<p>Finally you&#8217;ll learn how to enable <a href="https://quarkus.io/guides/maven-tooling#remote-development-mode">Remote Development Mode</a> for your Quarkus project</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Optionally, although highly recommendable, you will do the same but this time against an Oracle database. You will learn how to use a Kubernetes <code>Service</code> of type <code>ExternalName</code> to point to the Oracle database as if it were not deployed in your cluster, hence external.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+No worries if you don&#8217;t have an Oracle database at hand, we&#8217;ll show you how you can have an Oracle database running in a container in your OpenShift cluster (for testing purposes and as long as you have an OTN developer account you can use to pull images from the Oracle Container Registry).
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1 tiles browse">
+<h2>Browse modules</h2>
+<div class="sectionbody">
+<div class="paragraph tile">
+<p><a href="01-setup.html" class="page">Get Started</a></p>
+</div>
+<div class="ulist tile">
+<div class="title"><a href="02a-spring-boot-common.html" class="page">Spring Boot Inner-Loop Development</a></div>
+<ul>
+<li>
+<p><a href="02a-spring-boot-common.html#the-code" class="page">Common</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="02a-spring-boot-common.html#the-code" class="page">The code</a></p>
+</li>
+<li>
+<p><a href="02a-spring-boot-common.html#maven-profiles" class="page">Maven Profiles</a></p>
+</li>
+<li>
+<p><a href="02a-spring-boot-common.html#run-local" class="page">Running the code locally against H2</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="02b-spring-boot-deploy-postgresql.html" class="page">Using PostgreSQL as Database</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="02b-spring-boot-deploy-postgresql.html#deploy-database" class="page">Deploying PostgreSQL Database</a></p>
+</li>
+<li>
+<p><a href="02b-spring-boot-deploy-postgresql.html#deploy-code" class="page">Deploying the code</a></p>
+</li>
+<li>
+<p><a href="02b-spring-boot-deploy-postgresql.html#run-local-telepresence" class="page">Extending the inner-loop with Telepresence</a></p>
+</li>
+<li>
+<p><a href="02b-spring-boot-deploy-postgresql.html#binary-deploy" class="page">Binary deploy S2I</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="02c-spring-boot-deploy-oracle.html" class="page">Using Oracle as Database</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="02c-spring-boot-deploy-oracle.html#deploy-database" class="page">Deploying Oracle RDBMS</a></p>
+</li>
+<li>
+<p><a href="02c-spring-boot-deploy-oracle.html#deploy-code" class="page">Deploying the code</a></p>
+</li>
+<li>
+<p><a href="02c-spring-boot-deploy-oracle.html#run-local-telepresence" class="page">Extending the inner-loop with Telepresence</a></p>
+</li>
+<li>
+<p><a href="02c-spring-boot-deploy-oracle.html#binary-deploy" class="page">Binary deploy S2I</a></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="ulist tile">
+<div class="title"><a href="03a-quarkus-common.html" class="page">Quarkus Inner-Loop Development</a></div>
+<ul>
+<li>
+<p><a href="03a-quarkus-common.html#the-code" class="page">Common</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="03a-quarkus-common.html#the-code" class="page">The code</a></p>
+</li>
+<li>
+<p><a href="03a-quarkus-common.html#maven-profiles" class="page">Maven Profiles</a></p>
+</li>
+<li>
+<p><a href="03a-quarkus-common.html#run-local" class="page">Running the code locally against H2</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="03b-quarkus-deploy-postgresql.html" class="page">Using PostgreSQL as Database</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="03b-quarkus-deploy-postgresql.html#deploy-database" class="page">Deploying PostgreSQL Database</a></p>
+</li>
+<li>
+<p><a href="03b-quarkus-deploy-postgresql.html#deploy-code" class="page">Deploying the code</a></p>
+</li>
+<li>
+<p><a href="03b-quarkus-deploy-postgresql.html#run-local-telepresence" class="page">Extending the inner-loop with Telepresence</a></p>
+</li>
+<li>
+<p><a href="03b-quarkus-deploy-postgresql.html#binary-deploy" class="page">Binary deploy S2I</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="03c-quarkus-deploy-oracle.html" class="page">Using Oracle as Database</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="03c-quarkus-deploy-oracle.html#deploy-database" class="page">Deploying Oracle RDBMS</a></p>
+</li>
+<li>
+<p><a href="03c-quarkus-deploy-oracle.html#deploy-code" class="page">Deploying the code</a></p>
+</li>
+<li>
+<p><a href="03c-quarkus-deploy-oracle.html#run-local-telepresence" class="page">Extending the inner-loop with Telepresence</a></p>
+</li>
+<li>
+<p><a href="03c-quarkus-deploy-oracle.html#binary-deploy" class="page">Binary deploy S2I</a></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="next"><a href="01-setup.html" class="query-params-link">Setup</a></span>
+</nav>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <a class="rhd-logo" href="https://developers.redhat.com" target="_blank"></div>
+</footer>
+<script src="../_/js/vendor/clipboard.js"></script>
+<script src="../_/js/site.js"></script>
+<script async src="../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

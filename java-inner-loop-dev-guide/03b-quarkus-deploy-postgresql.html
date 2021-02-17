@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>PostgreSQL as Database :: Java Inner Loop Dev Guide</title>
+    <link rel="canonical" href="https://redhat-scholars.github.io/java-inner-loop-dev-guide/java-inner-loop-dev-guide/03b-quarkus-deploy-postgresql.html">
+    <link rel="prev" href="03a-quarkus-common.html">
+    <link rel="next" href="03c-quarkus-deploy-oracle.html">
+    <meta name="generator" content="Antora 2.3.4">
+    <link rel="stylesheet" href="../_/css/site.css">
+<link rel="icon" href="../_/img/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://developers.redhat.com" target="_blank"><img
+          src="../_/img/header_logo.png" height="40px" alt="Red Hat Developer Program"></a>
+      <a class="navbar-item" href="https://redhat-scholars.github.io/java-inner-loop-dev-guide">Java Inner Loop Dev Guide</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Books</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">CheatSheets</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">CheatSheet A</a>
+            <a class="navbar-item" href="#">CheatSheet B</a>
+            <a class="navbar-item" href="#">CheatSheet C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Upcoming Events</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Event A</a>
+            <a class="navbar-item" href="#">Event B</a>
+            <a class="navbar-item" href="#">Event C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">More Tutorials</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Tutorial A</a>
+            <a class="navbar-item" href="#">Tutorial B</a>
+            <a class="navbar-item" href="#">Tutorial C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="java-inner-loop-dev-guide" data-version="master">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html">Java Inner-Loop Dev</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="01-setup.html">Setup</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="01-setup.html#prerequisite">Prerequisites</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="02a-spring-boot-common.html">Spring Boot Inner-Loop</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="02a-spring-boot-common.html#the-code">Common</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="02a-spring-boot-common.html#the-code">The code</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="02a-spring-boot-common.html#maven-profiles">Maven Profiles</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="02a-spring-boot-common.html#run-local">Running the code locally against H2</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="02b-spring-boot-deploy-postgresql.html">PostgreSQL as Database</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="02b-spring-boot-deploy-postgresql.html#deploy-database">Deploying PostgreSQL</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="02b-spring-boot-deploy-postgresql.html#deploy-code">Deploying the code</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="02b-spring-boot-deploy-postgresql.html#run-local-telepresence">Extending the inner-loop with Telepresence</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="02b-spring-boot-deploy-postgresql.html#binary-deploy">Binary deploy S2I</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="02c-spring-boot-deploy-oracle.html">Oracle as Database</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="02c-spring-boot-deploy-oracle.html#deploy-database">Deploying Oracle</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="02c-spring-boot-deploy-oracle.html#deploy-code">Deploying the code</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="02c-spring-boot-deploy-oracle.html#run-local-telepresence">Extending the inner-loop with Telepresence</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="02c-spring-boot-deploy-oracle.html#binary-deploy">Binary deploy S2I</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="03a-quarkus-common.html">Quarkus Inner-Loop</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="03a-quarkus-common.html#the-code">Common</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="03a-quarkus-common.html#the-code">The code</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="03a-quarkus-common.html#maven-profiles">Maven Profiles</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="03a-quarkus-common.html#run-local">Running the code locally against H2</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="03b-quarkus-deploy-postgresql.html">PostgreSQL as Database</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#deploy-database">Deploying PostgreSQL</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#deploy-code">Deploying the code</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#run-local-telepresence">Extending the inner-loop with Telepresence</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#run-local-remote-dev">Extending the inner-loop with remote development</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#binary-deploy">Binary deploy S2I</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="03c-quarkus-deploy-oracle.html">Oracle as Database</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="03c-quarkus-deploy-oracle.html#deploy-database">Deploying Oracle</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="03c-quarkus-deploy-oracle.html#deploy-code">Deploying the code</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="03c-quarkus-deploy-oracle.html#run-local-telepresence">Extending the inner-loop with Telepresence</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="03c-quarkus-deploy-oracle.html#run-local-remote-dev">Extending the inner-loop with remote development</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="03c-quarkus-deploy-oracle.html#binary-deploy">Binary deploy S2I</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Java Inner-Loop Dev</span>
+    <span class="version">master</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">Java Inner-Loop Dev</span>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="index.html">master</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Java Inner-Loop Dev</a></li>
+    <li><a href="03a-quarkus-common.html">Quarkus Inner-Loop</a></li>
+    <li><a href="03b-quarkus-deploy-postgresql.html">PostgreSQL as Database</a></li>
+  </ul>
+</nav>
+  <div class="edit-this-page"><a href="https://github.com/redhat-scholars/java-inner-loop-dev-guide/edit/master/documentation/modules/ROOT/pages/03b-quarkus-deploy-postgresql.adoc">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">PostgreSQL as Database</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>So before we deploy the code we need a Database right? For the sake of simplicity let&#8217;s deploy PostgreSQL using some simple commands. Maybe in your real deployment you&#8217;d use an external instance, sure, we take that into account in the</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="deploy-database"><a class="anchor" href="#deploy-database"></a>Deploying PostgreSQL on OCP</h2>
+<div class="sectionbody">
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Before proceeding log in your cluster using <code>oc login</code> with a normal user no need for special permissions.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>In order to run our application, we need a namespace, let&#8217;s create one:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-bash hljs" data-lang="bash">export PROJECT_NAME=%USERNAME%-fruit-service-postgresql
+oc new-project ${PROJECT_NAME}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In order for the application to work properly we&#8217;ll first deploy a <code>PostgreSQL</code> database, then the code, to do so run these commands:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-bash hljs" data-lang="bash">oc new-app -e POSTGRESQL_USER=luke -e POSTGRESQL_PASSWORD=secret -e POSTGRESQL_DATABASE=FRUITSDB \
+  centos/postgresql-10-centos7 --as-deployment-config=true --name=postgresql-db -n ${PROJECT_NAME}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now let&#8217;s label the deployment so that it look better in the web console:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-bash hljs" data-lang="bash">oc label dc/postgresql-db app.kubernetes.io/part-of=fruit-service-app -n ${PROJECT_NAME} &amp;&amp; \
+  oc label dc/postgresql-db app.openshift.io/runtime=postgresql --overwrite=true -n ${PROJECT_NAME}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Check the database is running:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-bash hljs" data-lang="bash">oc get pod -n ${PROJECT_NAME}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You should see something like this:</p>
+</div>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-bash hljs" data-lang="bash">NAME                        READY   STATUS      RESTARTS   AGE
+postgresql-db-1-deploy      0/1     Completed   0          2d6h
+postgresql-db-1-n585q       1/1     Running     0          2d6h</code></pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>You can also run this command to check the name of the POD:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-bash hljs" data-lang="bash">oc get pods -n ${PROJECT_NAME} -o json | jq -r '.items[] | select(.status.phase | test("Running")) | select(.metadata.name | test("postgresql-db")).metadata.name'</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="deploy-code"><a class="anchor" href="#deploy-code"></a>Deploying the code on OCP</h2>
+<div class="sectionbody">
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-bash hljs" data-lang="bash">mvn clean package -Dquarkus.kubernetes.deploy=true -DskipTests -Dquarkus.profile=prod-postgresql</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Move to the OpenShift web console and from <code>Topology</code> in the <code>Developer</code> perspective click on the route link as in the picture.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/fruit-service-postgresql-topology-quarkus.png" alt="Fruit Service on PostgreSQL Topology">
+</div>
+</div>
+<div class="paragraph">
+<p>You should see this.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/fruit-service-postgresql-display-quarkus.png" alt="Fruit Service on PostgreSQL">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="run-local-telepresence"><a class="anchor" href="#run-local-telepresence"></a>Extending the inner-loop with Telepresence</h2>
+<div class="sectionbody">
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="title">Permissions needed</div>
+<div class="paragraph">
+<p>This needs to be run by a <code>cluster-admin</code>, but once you run it go back to the normal user.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-bash hljs" data-lang="bash">oc adm policy add-scc-to-user privileged -z default -n ${PROJECT_NAME}
+oc adm policy add-scc-to-user anyuid -z default -n ${PROJECT_NAME}</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Telepresence will modify the network so that Services in Kubernetes are reachable from your laptop and viceversa.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The next command will result in the deployment for our application being scaled down to zero and the network altered so that traffic to it ends up in your laptop in port <code>8080</code>.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+You&#8217;ll be asked for <code>sudo</code> password, this is normal, telepresence needs to be able to modify networking rules so that you can see Kubernetes Services as local.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-bash hljs" data-lang="bash">export TELEPRESENCE_USE_OCP_IMAGE=NO
+oc project ${PROJECT_NAME}
+telepresence --swap-deployment atomic-fruit-service --expose 8080</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Evetually you&#8217;ll se something like this:</p>
+</div>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-text hljs" data-lang="text">...
+T: Forwarding remote port 8080 to local port 8080.
+
+T: Guessing that Services IP range is ['172.30.0.0/16']. Services started after this point will be inaccessible if are outside this range; restart telepresence
+T: if you can't access a new Service.
+T: Connected. Flushing DNS cache.
+T: Setup complete. Launching your command.
+
+The default interactive shell is now zsh.
+To update your account to use zsh, please run `chsh -s /bin/zsh`.
+For more details, please visit https://support.apple.com/kb/HT208050.
+@fruit-service-postgresql-dev/api-cluster-6d30-6d30-example-opentlc-com:6443/user1|bash-3.2$</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the <code>Topology</code> view you should see this.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Our deployment has been scaled down to zero and substituted by a pod generated by <code>Telepresence</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/fruit-service-postgresql-topology-telepresence-quarkus.png" alt="Fruit Service on PostgreSQL Topology - Quarkus with Telepresence">
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Run from another terminal:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-bash hljs" data-lang="bash">curl http://postgresql-db:5432</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You should receive which looks bad but it&#8217;s actually good, this means that the DNS Service name local to Kubernetes can be resolved from your computer and that the port <code>5432</code> has been reached!</p>
+</div>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-bash hljs" data-lang="bash">curl: (52) Empty reply from server`</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Now let&#8217;s run our code locally but connected to the database (and/or other consumed services). To do so run this command from another terminal:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-bash hljs" data-lang="bash">export PROJECT_NAME=%USERNAME%-fruit-service-postgresql
+DB_USER=luke DB_PASSWORD=secret mvn quarkus:dev -Dquarkus.profile=prod-postgresql</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now open a browser and point to <a href="http://localhost:8080" target="_blank" rel="noopener">http://localhost:8080</a></p>
+</div>
+<div class="paragraph">
+<p>You should see this:</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+You can edit, save, delete to test the functionalities implemented by <code>FruitResource</code> <strong>and debug locally</strong>.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+You can also use the external route and get the same result.
+</td>
+</tr>
+</table>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/fruit-service-postgresql-display-telepresence-quarkus.png" alt="Fruit Service on PostgreSQL - Quarkus with Telepresence">
+</div>
+</div>
+<div class="paragraph">
+<p>Now you can go to the terminal running the code locally and stop the process with <span class="keyseq"><kbd>Ctrl</kbd>+<kbd>C</kbd></span>.</p>
+</div>
+<div class="paragraph">
+<p>Also go to the terminal window where <code>Telepresence</code> is running locally and type <code>exit</code>, you should see something similar to this:</p>
+</div>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-bash hljs" data-lang="bash">...
+@fruit-service-postgresql-dev/api-cluster-6d30-6d30-example-opentlc-com:6443/user1|bash-3.2$ exit
+exit
+T: Your process has exited.
+T: Exit cleanup in progress
+T: Cleaning up Pod</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="run-local-remote-dev"><a class="anchor" href="#run-local-remote-dev"></a>Extending the inner-loop with Quarkus remote development</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you use Quarkus there&#8217;s another method to extend the inner-loop to your cluster, it&#8217;s called <a href="https://quarkus.io/guides/maven-tooling#remote-development-mode">Remote Development Mode</a>. The idea is simple, run your code in the cluster while being able to replace classes/files that you change locally in your IDE automatically.</p>
+</div>
+<div class="paragraph">
+<p>There are two parts in this setup:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The server side, where the code runs in a container (in OpenShift for instance)</p>
+</li>
+<li>
+<p>The client side, where you connect to the server side and files are watched and uploaded whenever changes are detected</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>A couple of things to take into account regarding the server side:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The normal <code>JAR</code> is substituted by a <code>mutable</code> or <code>fast</code> JAR, that can be updated/reloaded live</p>
+</li>
+<li>
+<p>An environment variable <code>QUARKUS_LAUNCH_DEVMODE</code> needs to be set to <code>true</code></p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>In order to use remote development we need to update the <code>appllication.properties</code> file, please add these two lines at the top of the file.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>We only need these properties while using remote development and you should comment them once you&#8217;re done.</p>
+</li>
+<li>
+<p>You can (or even should) update the live-reload password as it&#8217;s checked while connecting to the server side of the remote development set up.</p>
+</li>
+</ol>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-bash hljs" data-lang="bash"># REMOTE DEV
+quarkus.package.type=mutable-jar
+quarkus.live-reload.password=changeit2</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now, delete the current deployment, then deploy it again but this time with remote development mode enabled. Please, run the following commands in order to do so:</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Pay close attention to these system properties we&#8217;re setting to deploy our code in remote development mode:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>-Dquarkus.kubernetes.deploy=true</code>: deploys to target <code>openshift</code></p>
+</li>
+<li>
+<p><code>-Dquarkus.profile=prod-postgresql</code>: activates this profile</p>
+</li>
+<li>
+<p><code>-Dquarkus.container-image.build=true</code>: builds the image using S2I as target is <code>openshift</code></p>
+</li>
+<li>
+<p><code>-Dquarkus.openshift.env-vars.quarkus-launch-devmode.value=true</code>: this property commands Quarkus plugin to add an environment variable called <code>QUARKUS_LAUNCH_DEVMODE</code> with value <code>true</code> to the <code>DeploymentConfig</code> object</p>
+</li>
+<li>
+<p><code>-Dquarkus.openshift.env-vars.quarkus-profile.value=prod-postgresql</code>: this property commands Quarkus plugin to add an environment variable called <code>QUARKUS_PROFILE</code> with value <code>prod-postgresql</code> to the <code>DeploymentConfig</code> object</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-bash hljs" data-lang="bash">oc delete dc/atomic-fruit-service -n ${PROJECT_NAME}
+mvn clean package -DskipTests -Dquarkus.kubernetes.deploy=true -Dquarkus.profile=prod-postgresql \
+  -Dquarkus.container-image.build=true \
+  -Dquarkus.openshift.env-vars.quarkus-launch-devmode.value=true \
+  -Dquarkus.openshift.env-vars.quarkus-profile.value=prod-postgresql</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You should see this:</p>
+</div>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-bash hljs" data-lang="bash">...
+[INFO] [io.quarkus.container.image.openshift.deployment.OpenshiftProcessor] Successfully pushed image-registry.openshift-image-registry.svc:5000/fruit-service-postgresql-dev/atomic-fruit-service@sha256:13c3781e82fa20b664bcc9e3c21a7a51d57c7a140c8232da66aa03ba73ff9b69
+[INFO] [io.quarkus.container.image.openshift.deployment.OpenshiftProcessor] Push successful
+[INFO] [io.quarkus.kubernetes.deployment.KubernetesDeployer] Deploying to openshift server: https://api.cluster-6d30.6d30.example.opentlc.com:6443/ in namespace: fruit-service-postgresql-dev.
+[INFO] [io.quarkus.kubernetes.deployment.KubernetesDeployer] Applied: Secret fruits-db.
+[INFO] [io.quarkus.kubernetes.deployment.KubernetesDeployer] Applied: Service atomic-fruit-service.
+[INFO] [io.quarkus.kubernetes.deployment.KubernetesDeployer] Applied: ImageStream atomic-fruit-service.
+[INFO] [io.quarkus.kubernetes.deployment.KubernetesDeployer] Applied: ImageStream openjdk-11.
+[INFO] [io.quarkus.kubernetes.deployment.KubernetesDeployer] Applied: BuildConfig atomic-fruit-service.
+[INFO] [io.quarkus.kubernetes.deployment.KubernetesDeployer] Applied: DeploymentConfig atomic-fruit-service.
+[INFO] [io.quarkus.kubernetes.deployment.KubernetesDeployer] Applied: Route atomic-fruit-service.
+[INFO] [io.quarkus.kubernetes.deployment.KubernetesDeployer] The deployed application can be accessed at: http://atomic-fruit-service-fruit-service-postgresql-dev.apps.cluster-6d30.6d30.example.opentlc.com
+[INFO] [io.quarkus.deployment.QuarkusAugmentor] Quarkus augmentation completed in 96673ms
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  01:43 min
+[INFO] Finished at: 2021-02-09T13:51:33+01:00
+[INFO] ------------------------------------------------------------------------</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s check that the deployment is setup correctly for remote development. Be patient here, give it some seconds before you see something, you may even need to run it again.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Dont forget to stop the command by typing <span class="keyseq"><kbd>Ctrl</kbd>+<kbd>C</kbd></span>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-bash hljs" data-lang="bash">oc logs -f dc/atomic-fruit-service | grep -i profile</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+The important thing is that profile <strong>prod-postgresql</strong> and <strong>live coding</strong> have been <strong>activated</strong>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Eventually you&#8217;ll see this. It just takes some seconds, be patient.</p>
+</div>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-bash hljs" data-lang="bash">...  [io.quarkus] (Quarkus Main Thread) Profile prod-postgresql activated. Live Coding activated.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We need the external route to our service, we&#8217;ll save the value in <code>ROUTE_URL</code> to use it later.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-bash hljs" data-lang="bash">export ROUTE_URL="http://$(oc get route/atomic-fruit-service -o jsonpath='{.spec.host}')"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now we have to connect to our application running in remote dev mode, we&#8217;ll do it like this.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-bash hljs" data-lang="bash">./mvnw quarkus:remote-dev \
+  -Dquarkus.live-reload.url=${ROUTE_URL} \
+  -Dquarkus.profile=prod-postgresql</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You should see something similar to this:</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Make sure you see <code>Connected to remote server</code> at the end of the log.</p>
+</li>
+<li>
+<p>You&#8217;ll find interesting that the jar sent while in remote mode is <code>quarkus-run.jar</code>, the <code>mutable-jar</code>. This fast jar allows sending only those parts that have change and reload them live.</p>
+</li>
+</ol>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-bash hljs" data-lang="bash">[INFO] Scanning for projects...
+[INFO]
+[INFO] ------------&lt; com.redhat.atomic.fruit:atomic-fruit-service &gt;------------
+[INFO] Building atomic-fruit-service 1.0-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- quarkus-maven-plugin:1.10.5.Final:remote-dev (default-cli) @ atomic-fruit-service ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 5 resources
+[INFO] Nothing to compile - all classes are up to date
+Listening for transport dt_socket at address: 5005
+2021-02-10 11:38:53,921 INFO  [org.jbo.threads] (main) JBoss Threads version 3.1.1.Final
+2021-02-10 11:38:54,138 INFO  [io.qua.kub.dep.KubernetesDeployer] (build-11) Only the first deployment target (which is 'openshift') selected via "quarkus.kubernetes.deployment-target" will be deployed
+2021-02-10 11:38:54,329 INFO  [org.hib.Version] (build-10) HHH000412: Hibernate ORM core version 5.4.26.Final
+2021-02-10 11:38:54,400 WARN  [io.qua.arc.pro.BeanArchives] (build-5) Failed to index boolean: Class does not exist in ClassLoader QuarkusClassLoader:Deployment Class Loader
+[INFO] Checking for existing resources in: /Users/cvicensa/Projects/openshift/redhat-scholars/java-inner-loop-dev-guide/apps/quarkus-app/src/main/kubernetes.
+[INFO] Adding existing Secret with name: fruits-db.
+2021-02-10 11:38:56,848 INFO  [io.qua.dep.QuarkusAugmentor] (main) Quarkus augmentation completed in 3265ms
+2021-02-10 11:38:59,792 INFO  [io.qua.ver.htt.dep.dev.HttpRemoteDevClient] (Remote dev client thread) Sending lib/deployment/appmodel.dat
+2021-02-10 11:38:59,867 INFO  [io.qua.ver.htt.dep.dev.HttpRemoteDevClient] (Remote dev client thread) Sending quarkus-run.jar
+2021-02-10 11:38:59,952 INFO  [io.qua.ver.htt.dep.dev.HttpRemoteDevClient] (Remote dev client thread) Sending app/atomic-fruit-service-1.0-SNAPSHOT.jar
+2021-02-10 11:38:59,989 INFO  [io.qua.ver.htt.dep.dev.HttpRemoteDevClient] (Remote dev client thread) Sending lib/deployment/build-system.properties
+2021-02-10 11:39:00,030 INFO  [io.qua.ver.htt.dep.dev.HttpRemoteDevClient] (Remote dev client thread) Connected to remote server</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you go to the web console you should see this.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/fruit-service-postgresql-topology-remote-dev-quarkus.png" alt="Fruit Service on PostgreSQL Topology - Quarkus with Remote Dev">
+</div>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s give it a try, shall we?</p>
+</div>
+<div class="paragraph">
+<p>Open <code>${ROUTE_URL}</code> in a browser, you should see this.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/fruit-service-postgresql-display-remote-dev-quarkus.png" alt="Fruit Service on PostgreSQL - Quarkus with Remote Dev">
+</div>
+</div>
+<div class="paragraph">
+<p>Now go to the editor find <code>src/main/resources/templates/index.html</code> and replace this:</p>
+</div>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-bash hljs" data-lang="bash">&lt;h1&gt;CRUD Mission - Quarkus&lt;/h1&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With this:</p>
+</div>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-bash hljs" data-lang="bash">&lt;h1&gt;CRUD Mission - Quarkus Remote&lt;/h1&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Changes are automatically detected and sent to the remote application. Check the terminal, you should see these new lines:</p>
+</div>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-bash hljs" data-lang="bash">2021-02-10 12:21:45,266 INFO  [io.qua.dep.dev.RuntimeUpdatesProcessor] (Remote dev client thread) File change detected: /Users/cvicensa/Projects/openshift/redhat-scholars/java-inner-loop-dev-guide/apps/quarkus-app/src/main/resources/templates/index.html
+2021-02-10 12:21:45,678 INFO  [io.qua.kub.dep.KubernetesDeployer] (build-17) Only the first deployment target (which is 'openshift') selected via "quarkus.kubernetes.deployment-target" will be deployed
+2021-02-10 12:21:47,092 INFO  [io.qua.dep.QuarkusAugmentor] (Remote dev client thread) Quarkus augmentation completed in 1769ms
+2021-02-10 12:21:47,106 INFO  [io.qua.dep.dev.RuntimeUpdatesProcessor] (Remote dev client thread) Hot replace total time: 1.852s
+2021-02-10 12:21:48,896 INFO  [io.qua.ver.htt.dep.dev.HttpRemoteDevClient] (Remote dev client thread) Sending dev/app/templates/index.html
+2021-02-10 12:21:48,964 INFO  [io.qua.ver.htt.dep.dev.HttpRemoteDevClient] (Remote dev client thread) Sending quarkus-run.jar
+2021-02-10 12:21:49,006 INFO  [io.qua.ver.htt.dep.dev.HttpRemoteDevClient] (Remote dev client thread) Sending app/atomic-fruit-service-1.0-SNAPSHOT.jar
+2021-02-10 12:21:49,044 INFO  [io.qua.ver.htt.dep.dev.HttpRemoteDevClient] (Remote dev client thread) Sending lib/deployment/build-system.properties</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Go back to the UI of our application and refresh change</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/fruit-service-postgresql-display-new-remote-dev-quarkus.png" alt="Fruit Service on PostgreSQL New - Quarkus with Remote Dev">
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Don&#8217;t forget that whenever you change a file locally the app is rebuilt and relevant elements and uploaded and refreshed
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Once you&#8217;re done with the remote development mode don&#8217;t forget to comment the lines we added before, as in the next exceprt.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-bash hljs" data-lang="bash"># REMOTE DEV
+#quarkus.package.type=mutable-jar
+#quarkus.live-reload.password=changeit2</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="binary-deploy"><a class="anchor" href="#binary-deploy"></a>Binary deploy S2I</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Finally, imagine that after debugging your code locally you want to redeploy on OpenShift in a similar way but without using the OpenShift extension. Well, this is possible by leveraging Source to Image (S2I) let&#8217;s have a look to the <code>BuildConfigs</code> in our project.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Once you have deployed your code using the OpenShift plugin one <code>BuildConfig</code> has been created for you (atomic-fruit-service in this case). But if you had started from the scratch you could have created that <code>BuildConfig</code> by hand and use the technique we&#8217;re explaining here.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>So first of all let&#8217;s get the BCs (<code>BuildConfigs</code>) in our namespace:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-bash hljs" data-lang="bash">oc get bc -n ${PROJECT_NAME}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You should get this:</p>
+</div>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-bash hljs" data-lang="bash">NAME                   TYPE     FROM     LATEST
+atomic-fruit-service   Source   Binary   1</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s read some details:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-bash hljs" data-lang="bash">oc get bc/atomic-fruit-service -o yaml -n ${PROJECT_NAME}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We have copied the relevants parts below to focus on the important part of the BC YAML.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Focus on <code>spec&#8594;source&#8594;type</code> &#8658; <code>Binary</code> this means that in order to build image <code>spec&#8594;output&#8594;to&#8594;name</code> you need to provide a binary file, a <code>JAR</code> file in this case.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-yaml hljs" data-lang="yaml">apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  labels:
+    app.kubernetes.io/name: atomic-fruit-service
+    app.kubernetes.io/part-of: fruit-service-app
+    app.kubernetes.io/version: 1.0-SNAPSHOT
+    app.openshift.io/runtime: quarkus
+    department: fruity-dept
+  name: atomic-fruit-service
+  namespace: fruit-service-postgresql-dev
+  ...
+spec:
+  nodeSelector: null
+  output:
+    to:
+      kind: ImageStreamTag
+      name: atomic-fruit-service:1.0-SNAPSHOT
+  postCommit: {}
+  resources: {}
+  runPolicy: Serial
+  source:
+    binary: {}
+    type: Binary
+  strategy:
+    sourceStrategy:
+      from:
+        kind: ImageStreamTag
+        name: openjdk-11:latest
+    type: Source
+status:
+...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s package our application with the right profile and build an image with it:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-bash hljs" data-lang="bash">mvn clean package -DskipTests -Dquarkus.kubernetes.deploy=false -Dquarkus.profile=prod-postgresql</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After a successful build, let&#8217;s start the build of the image in OpenShift:</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+We have to include <code>target/atomic-fruit-service-1.0-SNAPSHOT-runner.jar</code> and the contents of <code>target/lib/</code> in a zip file and start a new build with it.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-bash hljs" data-lang="bash">zip atomic-fruit-service.zip target/lib/* target/atomic-fruit-service-1.0-SNAPSHOT-runner.jar
+oc start-build atomic-fruit-service --from-archive=./atomic-fruit-service.zip -n ${PROJECT_NAME}
+rm atomic-fruit-service.zip</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As you can see in the output the <code>JAR</code> file is uploaded and a new Build is started.</p>
+</div>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-bash hljs" data-lang="bash">Uploading archive file "atomic-fruit-service.zip" as binary input for the build ...
+
+Uploading finished
+build.build.openshift.io/fruit-service-3 started</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And let&#8217;s have a look to the logs while the build is happening:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-bash hljs" data-lang="bash">oc logs -f bc/atomic-fruit-service -n ${PROJECT_NAME}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Log output from the current build (only relevant lines):</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+It all starts with <code>Receiving source from STDIN as archive</code> so the image is built from a binary file within OpenShift as we checked out before.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-bash hljs" data-lang="bash">Receiving source from STDIN as archive ...
+Caching blobs under "/var/cache/blobs".
+...
+Storing signatures
+Generating dockerfile with builder image registry.access.redhat.com/ubi8/openjdk-11@sha256:7921ba01d91c5598595dac9a9216e45cd6b175c22d7d859748304067d2097fae
+STEP 1: FROM registry.access.redhat.com/ubi8/openjdk-11@sha256:7921ba01d91c5598595dac9a9216e45cd6b175c22d7d859748304067d2097fae
+STEP 2: LABEL "io.openshift.build.image"="registry.access.redhat.com/ubi8/openjdk-11@sha256:7921ba01d91c5598595dac9a9216e45cd6b175c22d7d859748304067d2097fae"       "io.openshift.build.source-location"="/tmp/build/inputs"       "io.openshift.s2i.destination"="/tmp"
+STEP 3: ENV OPENSHIFT_BUILD_NAME="atomic-fruit-service-4"     OPENSHIFT_BUILD_NAMESPACE="fruit-service-postgresql-dev"
+STEP 4: USER root
+STEP 5: COPY upload/src /tmp/src
+STEP 6: RUN chown -R 185:0 /tmp/src
+STEP 7: USER 185
+STEP 8: RUN /usr/local/s2i/assemble
+INFO S2I source build with plain binaries detected
+INFO Copying binaries from /tmp/src to /deployments ...
+target/
+target/atomic-fruit-service-1.0-SNAPSHOT-runner.jar
+target/lib/
+target/lib/antlr.antlr-2.7.7.jar
+...
+STEP 9: CMD /usr/local/s2i/run
+STEP 10: COMMIT temp.builder.openshift.io/fruit-service-postgresql-dev/atomic-fruit-service-4:31d1775e
+Getting image source signatures
+...
+Writing manifest to image destination
+Storing signatures
+--&gt; cd6e79768eb
+cd6e79768ebfd82c7617a115f558e16e9a8bd3a2eeb8be9ae605c8e48ef9b75f
+
+Pushing image image-registry.openshift-image-registry.svc:5000/fruit-service-postgresql-dev/atomic-fruit-service:1.0-SNAPSHOT ...
+Getting image source signatures
+...
+Writing manifest to image destination
+Storing signatures
+Successfully pushed image-registry.openshift-image-registry.svc:5000/fruit-service-postgresql-dev/atomic-fruit-service@sha256:497f0886ac1d9c5610ec20ea4f899e9617fb549eda28342905ff6369c5af4b2d
+Push successful</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can now test the new image as we have done before!</p>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="03a-quarkus-common.html" class="query-params-link">Quarkus Inner-Loop</a></span>
+  <span class="next"><a href="03c-quarkus-deploy-oracle.html" class="query-params-link">Oracle as Database</a></span>
+</nav>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <a class="rhd-logo" href="https://developers.redhat.com" target="_blank"></div>
+</footer>
+<script src="../_/js/vendor/clipboard.js"></script>
+<script src="../_/js/site.js"></script>
+<script async src="../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

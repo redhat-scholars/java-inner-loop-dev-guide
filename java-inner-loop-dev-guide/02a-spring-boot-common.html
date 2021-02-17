@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Spring Boot Inner-loop :: Java Inner Loop Dev Guide</title>
+    <link rel="canonical" href="https://redhat-scholars.github.io/java-inner-loop-dev-guide/java-inner-loop-dev-guide/02a-spring-boot-common.html">
+    <link rel="prev" href="01-setup.html">
+    <link rel="next" href="02b-spring-boot-deploy-postgresql.html">
+    <meta name="generator" content="Antora 2.3.4">
+    <link rel="stylesheet" href="../_/css/site.css">
+<link rel="icon" href="../_/img/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://developers.redhat.com" target="_blank"><img
+          src="../_/img/header_logo.png" height="40px" alt="Red Hat Developer Program"></a>
+      <a class="navbar-item" href="https://redhat-scholars.github.io/java-inner-loop-dev-guide">Java Inner Loop Dev Guide</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Books</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">CheatSheets</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">CheatSheet A</a>
+            <a class="navbar-item" href="#">CheatSheet B</a>
+            <a class="navbar-item" href="#">CheatSheet C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Upcoming Events</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Event A</a>
+            <a class="navbar-item" href="#">Event B</a>
+            <a class="navbar-item" href="#">Event C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">More Tutorials</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Tutorial A</a>
+            <a class="navbar-item" href="#">Tutorial B</a>
+            <a class="navbar-item" href="#">Tutorial C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="java-inner-loop-dev-guide" data-version="master">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html">Java Inner-Loop Dev</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="01-setup.html">Setup</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="01-setup.html#prerequisite">Prerequisites</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="02a-spring-boot-common.html">Spring Boot Inner-Loop</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="#the-code">Common</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#the-code">The code</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#maven-profiles">Maven Profiles</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#run-local">Running the code locally against H2</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="02b-spring-boot-deploy-postgresql.html">PostgreSQL as Database</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="02b-spring-boot-deploy-postgresql.html#deploy-database">Deploying PostgreSQL</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="02b-spring-boot-deploy-postgresql.html#deploy-code">Deploying the code</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="02b-spring-boot-deploy-postgresql.html#run-local-telepresence">Extending the inner-loop with Telepresence</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="02b-spring-boot-deploy-postgresql.html#binary-deploy">Binary deploy S2I</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="02c-spring-boot-deploy-oracle.html">Oracle as Database</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="02c-spring-boot-deploy-oracle.html#deploy-database">Deploying Oracle</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="02c-spring-boot-deploy-oracle.html#deploy-code">Deploying the code</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="02c-spring-boot-deploy-oracle.html#run-local-telepresence">Extending the inner-loop with Telepresence</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="02c-spring-boot-deploy-oracle.html#binary-deploy">Binary deploy S2I</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="03a-quarkus-common.html">Quarkus Inner-Loop</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="03a-quarkus-common.html#the-code">Common</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="03a-quarkus-common.html#the-code">The code</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="03a-quarkus-common.html#maven-profiles">Maven Profiles</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="03a-quarkus-common.html#run-local">Running the code locally against H2</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="03b-quarkus-deploy-postgresql.html">PostgreSQL as Database</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="03b-quarkus-deploy-postgresql.html#deploy-database">Deploying PostgreSQL</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="03b-quarkus-deploy-postgresql.html#deploy-code">Deploying the code</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="03b-quarkus-deploy-postgresql.html#run-local-telepresence">Extending the inner-loop with Telepresence</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="03b-quarkus-deploy-postgresql.html#run-local-remote-dev">Extending the inner-loop with remote development</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="03b-quarkus-deploy-postgresql.html#binary-deploy">Binary deploy S2I</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="03c-quarkus-deploy-oracle.html">Oracle as Database</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="03c-quarkus-deploy-oracle.html#deploy-database">Deploying Oracle</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="03c-quarkus-deploy-oracle.html#deploy-code">Deploying the code</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="03c-quarkus-deploy-oracle.html#run-local-telepresence">Extending the inner-loop with Telepresence</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="03c-quarkus-deploy-oracle.html#run-local-remote-dev">Extending the inner-loop with remote development</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="03c-quarkus-deploy-oracle.html#binary-deploy">Binary deploy S2I</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Java Inner-Loop Dev</span>
+    <span class="version">master</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">Java Inner-Loop Dev</span>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="index.html">master</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Java Inner-Loop Dev</a></li>
+    <li><a href="02a-spring-boot-common.html">Spring Boot Inner-Loop</a></li>
+  </ul>
+</nav>
+  <div class="edit-this-page"><a href="https://github.com/redhat-scholars/java-inner-loop-dev-guide/edit/master/documentation/modules/ROOT/pages/02a-spring-boot-common.adoc">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Spring Boot Inner-loop</h1>
+<div class="sect1">
+<h2 id="the-code"><a class="anchor" href="#the-code"></a>The code</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Our simple application exposes a CRUD interface for a table (<code>FRUIT</code>) in a relational database by using JPA and Hiebernate as the <code>ORM</code> framework. To do so, it uses JPA annotations like <code>@Entity</code>, <code>@Id</code>, etc. You can find the Java code of the JPA entity below.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+In order to make the code more portable we have annotated the <code>id</code> attribute so that the value is generated using a sequence named <code>FRUIT_SEQ</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock lines_7 console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Entity
+public class Fruit {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "FruitSequence")
+    @SequenceGenerator(name = "FruitSequence", sequenceName = "FRUIT_SEQ")
+    private Integer id;
+
+    private String name;
+
+    public Fruit() {
+    }
+
+    public Fruit(String type) {
+        this.name = type;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The actual service is implemented in class <code>FruitController</code> find below a simplified version of the code. Nothing complicated here.</p>
+</div>
+<div class="listingblock lines_7 console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@RestController
+@RequestMapping(value = "/api/fruits")
+public class FruitController {
+
+    private final FruitRepository repository;
+
+    public FruitController(FruitRepository repository) {
+        this.repository = repository;
+    }
+
+    @GetMapping("/{id}")
+    public Fruit get(@PathVariable("id") Integer id) {
+        ...
+        return repository.findById(id).get();
+    }
+
+    @GetMapping
+    public List&lt;Fruit&gt; getAll() {
+        ...
+        return StreamSupport
+                .stream(fruits, false)
+                .collect(Collectors.toList());
+    }
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping
+    public Fruit post(@RequestBody(required = false) Fruit fruit) {
+        ...
+        return repository.save(fruit);
+    }
+
+    ...
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="getting-the-code"><a class="anchor" href="#getting-the-code"></a>Getting the Code</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Time to get our hands dirty. Clone or download the code, your choice.</p>
+</div>
+<div class="tabset is-loading">
+<div class="ulist tabs">
+<ul>
+<li>
+<p><a id="tabset1_clone-the-code"></a>Clone the code</p>
+</li>
+<li>
+<p><a id="tabset1_download-the-code"></a>Download the code</p>
+</li>
+</ul>
+</div>
+<div class="content">
+<div class="tab-pane" aria-labelledby="tabset1_clone-the-code">
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git clone --single-branch --branch master https://github.com/redhat-scholars/java-inner-loop-dev-guide.git</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset1_download-the-code">
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -L https://github.com/redhat-scholars/java-inner-loop-dev-guide/archive/master.zip -o java-inner-loop-dev-guide.zip
+unzip java-inner-loop-dev-guide.zip
+mv java-inner-loop-dev-guide-master java-inner-loop-dev-guide</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Change to the dir where the code is.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cd java-inner-loop-dev-guide/apps/spring-boot-app</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="maven-profiles"><a class="anchor" href="#maven-profiles"></a>Maven Profiles</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>As we stated at the begging we want to use different databases, <strong>H2</strong> to develop quickcly then either <strong>PostgreSQL</strong> or <strong>Oracle</strong> once the code is deployed in OpenShift. In order to do so we have defined 3 profiles:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>local</strong> for H2</p>
+</li>
+<li>
+<p><strong>openshift-postgresql</strong> for PostgreSQL</p>
+</li>
+<li>
+<p><strong>openshift-oracle</strong> for Oracle</p>
+</li>
+</ul>
+</div>
+<div class="tabset is-loading">
+<div class="ulist tabs">
+<ul>
+<li>
+<p><a id="tabset2_local"></a>local</p>
+</li>
+<li>
+<p><a id="tabset2_openshift-postgresql"></a>openshift-postgresql</p>
+</li>
+<li>
+<p><a id="tabset2_openshift-oracle"></a>openshift-oracle</p>
+</li>
+</ul>
+</div>
+<div class="content">
+<div class="tab-pane" aria-labelledby="tabset2_local">
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties"># H2 settings
+spring.datasource.url=jdbc:h2:mem:testdb
+spring.datasource.driverClassName=org.h2.Driver
+spring.datasource.driver-class-name=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=password
+spring.datasource.platform=h2
+
+spring.jpa.properties.hibernate.hbm2ddl.import_files=import-h2.sql
+spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+spring.jpa.hibernate.ddl-auto=create</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset2_openshift-postgresql">
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties"># PostgreSQL settings
+spring.datasource.url=jdbc:postgresql://${SERVICE_DB_HOST}:5432/${SERVICE_DB_NAME}
+spring.datasource.username=${SERVICE_DB_USER}
+spring.datasource.password=${SERVICE_DB_PASSWORD}
+spring.datasource.driver-class-name=org.postgresql.Driver
+spring.datasource.platform=postgresql
+
+spring.jpa.properties.hibernate.hbm2ddl.import_files=import-postgresql.sql
+spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.hibernate.ddl-auto=create
+
+## To avoid CLOB related error...
+spring.jpa.properties.hibernate.jdbc.lob.non_contextual_creation=true</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset2_openshift-oracle">
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties"># Oracle settings
+spring.datasource.url=jdbc:oracle:thin:@${SERVICE_DB_HOST}:1521/${SERVICE_DB_NAME}
+spring.datasource.username=${SERVICE_DB_USER}
+spring.datasource.password=${SERVICE_DB_PASSWORD}
+spring.datasource.driver.class=oracle.jdbc.driver.OracleDriver
+spring.datasource.platform=oracle
+
+spring.jpa.properties.hibernate.hbm2ddl.import_files=import-oracle.sql
+spring.jpa.database-platform=org.hibernate.dialect.Oracle12cDialect
+spring.jpa.hibernate.ddl-auto=create</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>There are accordingly 3 different <code>import.sql</code> files, basically the motivation is the different way of refering to the next value of a database sequence.</p>
+</div>
+<div class="tabset is-loading">
+<div class="ulist tabs">
+<ul>
+<li>
+<p><a id="tabset3_import-h2-sql"></a>import-h2.sql</p>
+</li>
+<li>
+<p><a id="tabset3_import-postgresql-sql"></a>import-postgresql.sql</p>
+</li>
+<li>
+<p><a id="tabset3_import-oracle-sql"></a>import-oracle.sql</p>
+</li>
+</ul>
+</div>
+<div class="content">
+<div class="tab-pane" aria-labelledby="tabset3_import-h2-sql">
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">insert into fruit (id, name) values (FRUIT_SEQ.NEXTVAL, 'Cherry');
+insert into fruit (id, name) values (FRUIT_SEQ.NEXTVAL, 'Apple');
+insert into fruit (id, name) values (FRUIT_SEQ.NEXTVAL, 'Banana');</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset3_import-postgresql-sql">
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">insert into fruit (id, name) values ( nextval ('FRUIT_SEQ'), 'Cherry');
+insert into fruit (id, name) values ( nextval ('FRUIT_SEQ'), 'Apple');
+insert into fruit (id, name) values ( nextval ('FRUIT_SEQ'), 'Banana');</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset3_import-oracle-sql">
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">insert into fruit (id, name) values (FRUIT_SEQ.NEXTVAL, 'Cherry');
+insert into fruit (id, name) values (FRUIT_SEQ.NEXTVAL, 'Apple');
+insert into fruit (id, name) values (FRUIT_SEQ.NEXTVAL, 'Banana');</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="run-local"><a class="anchor" href="#run-local"></a>Running the code locally against H2</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>One decision made for this example was to keep it as SQL-standard as possible so that we can move to different database as esasily as possible. I know, some times this is not possible or ideal&#8230;&#8203; but it&#8217;s ok for this example.</p>
+</div>
+<div class="paragraph">
+<p>As we have said before in this guide you&#8217;ll not have to code, instead we&#8217;ll focus on running, testing, deploying, etc.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s get started and see if the code works locally and using H2.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-bash hljs" data-lang="bash">mvn clean spring-boot:run -Dspring-boot.run.profiles=local -Plocal</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You should get this output.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="title">TIPS</div>
+<div class="paragraph">
+<p>Pay attention to the profile in use &#8658; <strong>The following profiles are active: <code>local</code></strong>.</p>
+</div>
+<div class="paragraph">
+<p>Also the <code>import.sql</code> file used &#8658; <strong>Executing import script 'file:/Users/nostromo/&#8230;&#8203;/import-h2.sql'</strong></p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">...
+2021-01-28 INFO 59429 --- [  restartedMain] dev.snowdrop.example.ExampleApplication  : Starting ExampleApplication on nostromo with PID 59429 (/Users/nostromo/java-inner-loop-dev-guide/target/classes started by cvicensa in /Users/nostromo/java-inner-loop-dev-guide)
+2021-01-28 INFO 59429 --- [  restartedMain] dev.snowdrop.example.ExampleApplication  : The following profiles are active: local
+...
+2021-01-28 INFO 59429 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2021-01-28 INFO 59429 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 42ms. Found 1 JPA repository interfaces.
+...
+2021-01-28 INFO 59429 --- [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1352 ms
+2021-01-28 INFO 59429 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2021-01-28 INFO 59429 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2021-01-28 INFO 59429 --- [  restartedMain] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:testdb'
+2021-01-28 INFO 59429 --- [  restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2021-01-28 INFO 59429 --- [  restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.4.21.Final
+2021-01-28 INFO 59429 --- [  restartedMain] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.0.Final}
+2021-01-28 INFO 59429 --- [  restartedMain] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
+2021-01-28 INFO 59429 --- [  restartedMain] o.h.t.schema.internal.SchemaCreatorImpl  : HHH000476: Executing import script 'file:/Users/nostromo/java-inner-loop-dev-guide/target/classes/import-h2.sql'
+2021-01-28 INFO 59429 --- [  restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-01-28 INFO 59429 --- [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+...
+2021-01-28 INFO 59429 --- [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2021-01-28 INFO 59429 --- [  restartedMain] dev.snowdrop.example.ExampleApplication  : Started ExampleApplication in 3.632 seconds (JVM running for 4.2)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now open a browser and point to <a href="http://localhost:8080:">http://localhost:8080</a></p>
+</div>
+<div class="paragraph">
+<p>You should see this:</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+You can edit, save, delete to test the functionalities implemented by <code>FruitController</code>
+</td>
+</tr>
+</table>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/fruit-service-h2-display.png" alt="Fruit Service on H2">
+</div>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="01-setup.html" class="query-params-link">Setup</a></span>
+  <span class="next"><a href="02b-spring-boot-deploy-postgresql.html" class="query-params-link">PostgreSQL as Database</a></span>
+</nav>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <a class="rhd-logo" href="https://developers.redhat.com" target="_blank"></div>
+</footer>
+<script src="../_/js/vendor/clipboard.js"></script>
+<script src="../_/js/site.js"></script>
+<script async src="../_/js/vendor/highlight.js"></script>
+  </body>
+</html>
