@@ -115,10 +115,7 @@ Here's the list of all query params used (they are all optional, but generated l
 
 Example:
 
-https://redhat-scholars.github.io/java-inner-loop-dev-guide/java-inner-loop-dev-guide/master/index.html?CLUSTER_SUBDOMAIN=apps-crc.testing&USERNAME=developer&PASSWORD=developer
-
-
-
+https://redhat-scholars.github.io/java-inner-loop-dev-guide/java-inner-loop-dev-guide/index.html?CLUSTER_SUBDOMAIN=apps-crc.testing&USERNAME=developer&PASSWORD=developer
 
 ## Contributing
 
