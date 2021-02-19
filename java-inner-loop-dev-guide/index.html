@@ -224,7 +224,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Not that far away we were used to develop monolithic multitier applications where the main theme was:</p>
+<p>Not that long ago we were developing monolithic multi-tier applications where the main theme was:</p>
 </div>
 <div class="literalblock">
 <div class="content">
@@ -232,7 +232,7 @@
 </div>
 </div>
 <div class="paragraph">
-<p>This has changed ever since we started to embrace Micro Services Architectures and specially with the advent of Kubernetes</p>
+<p>This has changed since we started to embrace a Microservices Architecture and especially with the advent of Kubernetes.</p>
 </div>
 <div class="quoteblock">
 <blockquote>
@@ -243,10 +243,10 @@ Kubernetes cluster"</p>
 </blockquote>
 </div>
 <div class="paragraph">
-<p>In general we all aggree these distributed architectures have lots of benefits but also pose some challenges. Among these challanges we&#8217;d like to <strong>highlight here the problems a developer has to face when developing kubernetes native applications</strong>.</p>
+<p>In general we all agree these distributed architectures have lots of benefits but also pose some challenges. One of those challenges we’d like to <strong>highlight here is the problem a developer has to face when developing kubernetes native applications</strong>.</p>
 </div>
 <div class="paragraph">
-<p>The truth is that, even though you will evetually run your code inside a kubernetes cluster, you still develop (in general) locally where you have your IDE, compilers, etc. There are several ways to explain the development cycle, here you are an informal definition.</p>
+<p>The truth is that, even though you will evetually run your code inside a kubernetes cluster, you still develop (in general) locally where you have your IDE, compilers, etc. There are several ways to explain the development cycle, for example.</p>
 </div>
 <div class="quoteblock">
 <blockquote>
@@ -271,7 +271,7 @@ Kubernetes cluster"</p>
 <div class="title">Figure 2. Kubernetes Native Development Loop</div>
 </div>
 <div class="paragraph">
-<p>Well if this is your case&#8230;&#8203; then you may not need to continue BUT if you happen to need to connect to several services, databases, etc. then having "it-all" locally maybe it&#8217;s not an option, if that is the case stay!</p>
+<p>Well if this is your case&#8230;&#8203; then you may not need to continue BUT if you happen to need to connect to several services, large database, etc. then having "it-all" locally maybe it&#8217;s not an option, if that is the case stay!</p>
 </div>
 <div class="paragraph">
 <p>Well, the <strong>goal</strong> of this guide is simple <strong>exploring different approaches to help you with the inner-loop of the kubernetes native development workflow</strong>.</p>
@@ -297,7 +297,7 @@ Kubernetes cluster"</p>
 <p>This guide concentrates on Java but concepts and the approach involving Telepresence applies to any technology.</p>
 </li>
 <li>
-<p>The cases involving Oracle RDBMS explain how to deploy Oracle in an OpenShift cluster but once done they consider that database as external to the cluster.</p>
+<p>The examples involving Oracle RDBMS show how to deploy Oracle in an OpenShift cluster but also consider that database as external to the cluster.</p>
 </li>
 </ul>
 </div>
@@ -317,7 +317,7 @@ Kubernetes cluster"</p>
 <h2 id="the-challenge"><a class="anchor" href="#the-challenge"></a>The Challenge</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Given the distributed nature of nowdays applications <strong>developers find themselves dealing with a pletora of services they need to integrate with</strong> while developing. <strong>So the challenge seems to be that those services need to be at reach and sometimes this is not easy</strong>.</p>
+<p>Nowadays, given the distributed nature of applications, <strong>developers find themselves dealing with a plethora of services they need to integrate with</strong> at development time. <strong>So the challenge is for those services to be accessible/available and sometimes this is not easy</strong>.</p>
 </div>
 <div class="paragraph">
 <p>Let&#8217;s review some of the approches you can take in order to mitigate this problem.</p>
@@ -344,7 +344,7 @@ Kubernetes cluster"</p>
 </ul>
 </div>
 <div class="paragraph">
-<p><strong>All these approaches are valid and plausible but some times they&#8217;re not the best way to go or just too complicated to maintain</strong>. For instance some times you need access to several services in different namespaces and you have to get all those with you in your local cluster&#8230;&#8203; other times some services are external and reachable only from the remote cluster&#8230;&#8203; and maybe mocking-up code is not your thing (or don&#8217;t have the skills or time to do it).</p>
+<p><strong>All these approaches are valid and plausible but sometimes they&#8217;re not the best way to go or just too complicated to maintain</strong>. For instance sometimes you need access to several services in different namespaces and you have to get them all locally&#8230;&#8203; other times some services are external and reachable only from the remote cluster&#8230;&#8203; and maybe mocking-up code is not your thing (or don&#8217;t have the skills or time to do it).</p>
 </div>
 <div class="paragraph">
 <p>This guide explores some alternatives to extend your local development environment (<strong>inner-loop</strong>) to the remote cluster for Java applications using two frameworks: Spring Boot and <a href="https://quarkus.io" target="_blank" rel="noopener">Quarkus</a>.</p>
@@ -355,7 +355,7 @@ Kubernetes cluster"</p>
 <h2 id="details"><a class="anchor" href="#details"></a>Details</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This tutorial provides you with a super-simple CRUD microservice (in two flavors: Spring Boot and <a href="https://quarkus.io" target="_blank" rel="noopener">Quarkus</a>), <strong><code>FruitService</code></strong>, that implements the usual functions: create, update, delete, find all, etc. mapped to a table in a releational database.</p>
+<p>This tutorial provides you with a super-simple CRUD microservice (in two flavors: Spring Boot and <a href="https://quarkus.io" target="_blank" rel="noopener">Quarkus</a>), <strong><code>FruitService</code></strong>, that implements the usual functions: create, update, delete, find all, etc. mapped to a table in a relational database.</p>
 </div>
 <div class="paragraph">
 <p>No need to code this time, the Java code is simple, it works and we have tested it against, H2, PostgreSQL and Oracle RDBMS.</p>
@@ -370,10 +370,10 @@ Kubernetes cluster"</p>
 <p>Deploy the code against PostgreSQL directly from the command line using the <a href="https://www.eclipse.org/jkube:">JKube</a> maven plugin</p>
 </li>
 <li>
-<p>You will also learn how JKube leverages Source to Image (<a href="https://docs.openshift.com/container-platform/4.6/builds/understanding-image-builds.html#builds-strategy-s2i-build_understanding-image-builds">S2I</a>) to speed up the process of building OCI images inside OpenShift.</p>
+<p>You will also learn how JKube leverages Source to Image (<a href="https://docs.openshift.com/container-platform/4.6/builds/understanding-image-builds.html#builds-strategy-s2i-build_understanding-image-builds">S2I</a>) to speed up the process of building container images inside OpenShift.</p>
 </li>
 <li>
-<p>You&#8217;ll find out how to do the same for Quarkus but this time using the OpenShift plugin instead of JKube</p>
+<p>You&#8217;ll find out how to do the same for Quarkus but this time using the Quarkus OpenShift plugin instead of JKube</p>
 </li>
 <li>
 <p>We will show you how to use <a href="https://telepresence.io:">Telepresence</a> to speed up development iterations.</p>
@@ -384,7 +384,7 @@ Kubernetes cluster"</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>Optionally, although highly recommendable, you will do the same but this time against an Oracle database. You will learn how to use a Kubernetes <code>Service</code> of type <code>ExternalName</code> to point to the Oracle database as if it were not deployed in your cluster, hence external.</p>
+<p>Optionally, although highly recommended, you will do the same but this time against an Oracle database. You will learn how to use a Kubernetes <code>Service</code> of type <code>ExternalName</code> to point to the Oracle database as if it were not deployed in your cluster, hence external.</p>
 </div>
 <div class="admonitionblock note">
 <table>
