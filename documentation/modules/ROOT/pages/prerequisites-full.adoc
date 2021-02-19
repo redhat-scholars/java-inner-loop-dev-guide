@@ -5,7 +5,7 @@ Please have them installed and configured before you get started with any of the
 
 [cols="4*^,4*.",options="header,+attributes"]
 |===
-|**Tool**|**macOS**|**Fedora**|**windows**
+|**Tool**|**macOS**|**Fedora**|**Windows**
 
 | `Git`
 | https://git-scm.com/download/mac[Download]

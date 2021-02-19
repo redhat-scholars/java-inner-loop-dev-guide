@@ -6,7 +6,7 @@ The following CLI tools are optional for running the exercises in this tutorial.
 [cols="4*^,4*.",options="header,+attributes"]
 |===
 
-|**Tool**|**macOS**|**Fedora**|**windows**
+|**Tool**|**macOS**|**Fedora**|**Windows**
 | `odo {odo-version}`
 | https://mirror.openshift.com/pub/openshift-v4/clients/odo/{odo-version}/odo-darwin-amd64[Download]
 | https://mirror.openshift.com/pub/openshift-v4/clients/odo/{odo-version}/odo-linux-amd64[Download]
