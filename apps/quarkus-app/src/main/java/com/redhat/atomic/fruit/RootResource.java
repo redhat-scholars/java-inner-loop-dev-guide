@@ -13,7 +13,6 @@ import org.jboss.logging.Logger;
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateInstance;
 import io.quarkus.runtime.configuration.ProfileManager;
-import io.quarkus.vertx.web.RouteFilter;
 
 @Path("/index.html")
 @Produces(MediaType.APPLICATION_JSON)
