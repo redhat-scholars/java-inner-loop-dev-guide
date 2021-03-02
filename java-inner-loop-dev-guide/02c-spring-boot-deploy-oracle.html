@@ -69,7 +69,7 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="02a-spring-boot-common.html#the-code">Common</a>
+    <a class="nav-link" href="02a-spring-boot-common.html">Using H2</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="02a-spring-boot-common.html#the-code">The code</a>
@@ -84,7 +84,7 @@
   </li>
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="02b-spring-boot-deploy-postgresql.html">PostgreSQL as Database</a>
+    <a class="nav-link" href="02b-spring-boot-deploy-postgresql.html">Using PostgreSQL</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="02b-spring-boot-deploy-postgresql.html#deploy-database">Deploying PostgreSQL</a>
@@ -96,13 +96,13 @@
     <a class="nav-link" href="02b-spring-boot-deploy-postgresql.html#run-local-telepresence">Extending the inner-loop with Telepresence</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="02b-spring-boot-deploy-postgresql.html#binary-deploy">Binary deploy S2I</a>
+    <a class="nav-link" href="02b-spring-boot-deploy-postgresql.html#binary-deploy">Binary deploy (S2I)</a>
   </li>
 </ul>
   </li>
   <li class="nav-item is-current-page" data-depth="2">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="02c-spring-boot-deploy-oracle.html">Oracle as Database</a>
+    <a class="nav-link" href="02c-spring-boot-deploy-oracle.html">Using Oracle RBDMS</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="#deploy-database">Deploying Oracle</a>
@@ -114,7 +114,7 @@
     <a class="nav-link" href="#run-local-telepresence">Extending the inner-loop with Telepresence</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="#binary-deploy">Binary deploy S2I</a>
+    <a class="nav-link" href="#binary-deploy">Binary deploy (S2I)</a>
   </li>
 </ul>
   </li>
@@ -126,7 +126,7 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="03a-quarkus-common.html#the-code">Common</a>
+    <a class="nav-link" href="03a-quarkus-common.html">Using H2</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="03a-quarkus-common.html#the-code">The code</a>
@@ -156,7 +156,7 @@
     <a class="nav-link" href="03b-quarkus-deploy-postgresql.html#run-local-remote-dev">Extending the inner-loop with remote development</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="03b-quarkus-deploy-postgresql.html#binary-deploy">Binary deploy S2I</a>
+    <a class="nav-link" href="03b-quarkus-deploy-postgresql.html#binary-deploy">Binary deploy (S2I)</a>
   </li>
 </ul>
   </li>
@@ -177,7 +177,7 @@
     <a class="nav-link" href="03c-quarkus-deploy-oracle.html#run-local-remote-dev">Extending the inner-loop with remote development</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="03c-quarkus-deploy-oracle.html#binary-deploy">Binary deploy S2I</a>
+    <a class="nav-link" href="03c-quarkus-deploy-oracle.html#binary-deploy">Binary deploy (S2I)</a>
   </li>
 </ul>
   </li>
@@ -215,7 +215,7 @@
   <ul>
     <li><a href="index.html">Java Inner-Loop Dev</a></li>
     <li><a href="02a-spring-boot-common.html">Spring Boot Inner-Loop</a></li>
-    <li><a href="02c-spring-boot-deploy-oracle.html">Oracle as Database</a></li>
+    <li><a href="02c-spring-boot-deploy-oracle.html">Using Oracle RBDMS</a></li>
   </ul>
 </nav>
   <div class="edit-this-page"><a href="https://github.com/redhat-scholars/java-inner-loop-dev-guide/edit/master/documentation/modules/ROOT/pages/02c-spring-boot-deploy-oracle.adoc">Edit this Page</a></div>
@@ -231,7 +231,7 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="deploy-database"><a class="anchor" href="#deploy-database"></a>Deploying Oracle on OCP</h2>
+<h2 id="deploy-database"><a class="anchor" href="#deploy-database"></a>Deploying Oracle on OpenShift</h2>
 <div class="sectionbody">
 <div class="admonitionblock note">
 <table>
@@ -240,7 +240,7 @@
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-You need credentials in the <a href="https://container-registry.oracle.com/pls/apex/f?p=113:1:113820723533011:::1:P1_BUSINESS_AREA:3:">Oracle Container Registry</a> in order to download Oracle DB images.
+You need credentials for the <a href="https://container-registry.oracle.com/pls/apex/f?p=113:1:113820723533011:::1:P1_BUSINESS_AREA:3:">Oracle Container Registry</a> in order to download Oracle DB images.
 </td>
 </tr>
 </table>
@@ -267,7 +267,7 @@ You may need to delete/adjust Limit Ranges in <code>${ORACLE_DB_PROJECT_NAME}</c
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-The OCI image to be downloaded is quite big, to grab a cup of coffee and keep calm.
+The Oracle database image to be downloaded is quite big, so grab a cup of coffee and be patient.
 </td>
 </tr>
 </table>
@@ -316,13 +316,13 @@ echo -n "Reg. Password: " &amp;&amp; read -s password</code></pre>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Once the container is running again be calm, after starting the DB daemon data needs to be copied. In total it could take more than 10 mins.
+Once the container is running again be patient, after starting the DB daemon data needs to be copied, this could take more than 10 minutes.
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>To have a look to the logs do this.</p>
+<p>To check activity, use the logs:</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
@@ -330,7 +330,7 @@ Once the container is running again be calm, after starting the DB daemon data n
 </div>
 </div>
 <div class="paragraph">
-<p>If you see this you&#8217;re on your way to get it working.</p>
+<p>If you see this in the logs then you are progressing well:</p>
 </div>
 <div class="listingblock console-output">
 <div class="content">
@@ -434,7 +434,7 @@ oc rsh $(oc get pods -o json | jq -r '.items[] | select(.metadata.name | test("o
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Prompt should look like this &#8658; <code>sh-4.2$</code>
+The prompt look like this &#8658; <code>sh-4.2$</code>
 </td>
 </tr>
 </table>
@@ -516,7 +516,7 @@ Prompt shoud look like this &#8658; <code>SQL&gt;</code>
 </div>
 </div>
 <div class="sect1">
-<h2 id="deploy-code"><a class="anchor" href="#deploy-code"></a>Deploying the code on OCP</h2>
+<h2 id="deploy-code"><a class="anchor" href="#deploy-code"></a>Deploying the code on OpenShift</h2>
 <div class="sectionbody">
 <div class="admonitionblock important">
 <table>
@@ -739,7 +739,7 @@ oc adm policy add-scc-to-user anyuid -z default -n ${PROJECT_NAME}</code></pre>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Telepresence will modify the network so that Services in Kubernetes are reachable from your laptop and viceversa.
+Telepresence will modify the network so that Services in Kubernetes are reachable from your laptop and vice versa.
 </td>
 </tr>
 </table>
@@ -825,10 +825,7 @@ SERVICE_DB_USER=luke SERVICE_DB_PASSWORD=secret SERVICE_DB_NAME=FRUITSDB SERVICE
 </div>
 </div>
 <div class="paragraph">
-<p>Now open a browser and point to <a href="http://localhost:8080:">http://localhost:8080</a></p>
-</div>
-<div class="paragraph">
-<p>You should see this:</p>
+<p>Now open a browser and point to <a href="http://localhost:8080" target="_blank" rel="noopener">http://localhost:8080</a></p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -841,6 +838,9 @@ You can edit, save, delete to test the functionalities implemented by <code>Frui
 </td>
 </tr>
 </table>
+</div>
+<div class="paragraph">
+<p>You should see this:</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -1021,7 +1021,7 @@ Push successful</code></pre>
 </div>
 </div>
 <nav class="pagination">
-  <span class="prev"><a href="02b-spring-boot-deploy-postgresql.html" class="query-params-link">PostgreSQL as Database</a></span>
+  <span class="prev"><a href="02b-spring-boot-deploy-postgresql.html" class="query-params-link">Using PostgreSQL</a></span>
   <span class="next"><a href="03a-quarkus-common.html" class="query-params-link">Quarkus Inner-Loop</a></span>
 </nav>
 </article>

@@ -68,7 +68,7 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="02a-spring-boot-common.html#the-code">Common</a>
+    <a class="nav-link" href="02a-spring-boot-common.html">Using H2</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="02a-spring-boot-common.html#the-code">The code</a>
@@ -83,7 +83,7 @@
   </li>
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="02b-spring-boot-deploy-postgresql.html">PostgreSQL as Database</a>
+    <a class="nav-link" href="02b-spring-boot-deploy-postgresql.html">Using PostgreSQL</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="02b-spring-boot-deploy-postgresql.html#deploy-database">Deploying PostgreSQL</a>
@@ -95,13 +95,13 @@
     <a class="nav-link" href="02b-spring-boot-deploy-postgresql.html#run-local-telepresence">Extending the inner-loop with Telepresence</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="02b-spring-boot-deploy-postgresql.html#binary-deploy">Binary deploy S2I</a>
+    <a class="nav-link" href="02b-spring-boot-deploy-postgresql.html#binary-deploy">Binary deploy (S2I)</a>
   </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="02c-spring-boot-deploy-oracle.html">Oracle as Database</a>
+    <a class="nav-link" href="02c-spring-boot-deploy-oracle.html">Using Oracle RBDMS</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="02c-spring-boot-deploy-oracle.html#deploy-database">Deploying Oracle</a>
@@ -113,7 +113,7 @@
     <a class="nav-link" href="02c-spring-boot-deploy-oracle.html#run-local-telepresence">Extending the inner-loop with Telepresence</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="02c-spring-boot-deploy-oracle.html#binary-deploy">Binary deploy S2I</a>
+    <a class="nav-link" href="02c-spring-boot-deploy-oracle.html#binary-deploy">Binary deploy (S2I)</a>
   </li>
 </ul>
   </li>
@@ -125,7 +125,7 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="03a-quarkus-common.html#the-code">Common</a>
+    <a class="nav-link" href="03a-quarkus-common.html">Using H2</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="03a-quarkus-common.html#the-code">The code</a>
@@ -155,7 +155,7 @@
     <a class="nav-link" href="03b-quarkus-deploy-postgresql.html#run-local-remote-dev">Extending the inner-loop with remote development</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="03b-quarkus-deploy-postgresql.html#binary-deploy">Binary deploy S2I</a>
+    <a class="nav-link" href="03b-quarkus-deploy-postgresql.html#binary-deploy">Binary deploy (S2I)</a>
   </li>
 </ul>
   </li>
@@ -176,7 +176,7 @@
     <a class="nav-link" href="#run-local-remote-dev">Extending the inner-loop with remote development</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="#binary-deploy">Binary deploy S2I</a>
+    <a class="nav-link" href="#binary-deploy">Binary deploy (S2I)</a>
   </li>
 </ul>
   </li>
@@ -230,7 +230,7 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="deploy-database"><a class="anchor" href="#deploy-database"></a>Deploying Oracle on OCP</h2>
+<h2 id="deploy-database"><a class="anchor" href="#deploy-database"></a>Deploying Oracle on OpenShift</h2>
 <div class="sectionbody">
 <div class="admonitionblock note">
 <table>
@@ -239,7 +239,7 @@
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-You need credentials in the <a href="https://container-registry.oracle.com/pls/apex/f?p=113:1:113820723533011:::1:P1_BUSINESS_AREA:3:">Oracle Container Registry</a> in order to download Oracle DB images.
+You need credentials for the <a href="https://container-registry.oracle.com/pls/apex/f?p=113:1:113820723533011:::1:P1_BUSINESS_AREA:3:">Oracle Container Registry</a> in order to download Oracle DB images.
 </td>
 </tr>
 </table>
@@ -266,7 +266,7 @@ You may need to delete/adjust Limit Ranges in <code>${ORACLE_DB_PROJECT_NAME}</c
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-The OCI image to be downloaded is quite big, to grab a cup of coffee and keep calm.
+The Oracle database image to be downloaded is quite big, so grab a cup of coffee and be patient.
 </td>
 </tr>
 </table>
@@ -320,7 +320,7 @@ oc adm policy add-scc-to-user anyuid -z default -n ${ORACLE_DB_PROJECT_NAME}</co
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Once the container is running again be calm, after starting the DB daemon data needs to be copied. In total it could take more than 10 mins.
+Once the container is running again be patient, after starting the DB daemon data needs to be copied, this could take more than 10 minutes.
 </td>
 </tr>
 </table>
@@ -466,7 +466,7 @@ oc rsh $(oc get pods -o json | jq -r '.items[] | select(.metadata.name | test("o
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Prompt should look like this &#8658; <code>sh-4.2$</code>
+The prompt look like this &#8658; <code>sh-4.2$</code>
 </td>
 </tr>
 </table>
@@ -548,7 +548,7 @@ Prompt shoud look like this &#8658; <code>SQL&gt;</code>
 </div>
 </div>
 <div class="sect1">
-<h2 id="deploy-code"><a class="anchor" href="#deploy-code"></a>Deploying the code on OCP</h2>
+<h2 id="deploy-code"><a class="anchor" href="#deploy-code"></a>Deploying the code on OpenShift</h2>
 <div class="sectionbody">
 <div class="admonitionblock important">
 <table>
@@ -640,7 +640,7 @@ EOF</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>You should see this.</p>
+<p>You should see this:</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -680,7 +680,7 @@ oc adm policy add-scc-to-user anyuid -z default -n ${PROJECT_NAME}</code></pre>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Telepresence will modify the network so that Services in Kubernetes are reachable from your laptop and viceversa.
+Telepresence will modify the network so that Services in Kubernetes are reachable from your laptop and vice versa.
 </td>
 </tr>
 </table>
@@ -795,9 +795,6 @@ DB_USER=luke DB_PASSWORD=secret mvn quarkus:dev -Dquarkus.profile=prod-oracle</c
 <div class="paragraph">
 <p>Now open a browser and point to <a href="http://localhost:8080" target="_blank" rel="noopener">http://localhost:8080</a></p>
 </div>
-<div class="paragraph">
-<p>You should see this:</p>
-</div>
 <div class="admonitionblock tip">
 <table>
 <tr>
@@ -809,6 +806,9 @@ You can edit, save, delete to test the functionalities implemented by <code>Frui
 </td>
 </tr>
 </table>
+</div>
+<div class="paragraph">
+<p>You should see this:</p>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -857,7 +857,7 @@ T: Cleaning up Pod</code></pre>
 <div class="ulist">
 <ul>
 <li>
-<p>The server side, where the code runs in a container (in OpenShift for instance)</p>
+<p>The server side, where the code runs in a container</p>
 </li>
 <li>
 <p>The client side, where you connect to the server side and files are watched and uploaded whenever changes are detected</p>

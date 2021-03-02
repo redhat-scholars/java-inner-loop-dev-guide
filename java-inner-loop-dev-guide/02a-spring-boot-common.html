@@ -67,9 +67,9 @@
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="02a-spring-boot-common.html">Spring Boot Inner-Loop</a>
 <ul class="nav-list">
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item is-current-page" data-depth="2">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="#the-code">Common</a>
+    <a class="nav-link" href="02a-spring-boot-common.html">Using H2</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="#the-code">The code</a>
@@ -84,7 +84,7 @@
   </li>
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="02b-spring-boot-deploy-postgresql.html">PostgreSQL as Database</a>
+    <a class="nav-link" href="02b-spring-boot-deploy-postgresql.html">Using PostgreSQL</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="02b-spring-boot-deploy-postgresql.html#deploy-database">Deploying PostgreSQL</a>
@@ -96,13 +96,13 @@
     <a class="nav-link" href="02b-spring-boot-deploy-postgresql.html#run-local-telepresence">Extending the inner-loop with Telepresence</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="02b-spring-boot-deploy-postgresql.html#binary-deploy">Binary deploy S2I</a>
+    <a class="nav-link" href="02b-spring-boot-deploy-postgresql.html#binary-deploy">Binary deploy (S2I)</a>
   </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="02c-spring-boot-deploy-oracle.html">Oracle as Database</a>
+    <a class="nav-link" href="02c-spring-boot-deploy-oracle.html">Using Oracle RBDMS</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="02c-spring-boot-deploy-oracle.html#deploy-database">Deploying Oracle</a>
@@ -114,7 +114,7 @@
     <a class="nav-link" href="02c-spring-boot-deploy-oracle.html#run-local-telepresence">Extending the inner-loop with Telepresence</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="02c-spring-boot-deploy-oracle.html#binary-deploy">Binary deploy S2I</a>
+    <a class="nav-link" href="02c-spring-boot-deploy-oracle.html#binary-deploy">Binary deploy (S2I)</a>
   </li>
 </ul>
   </li>
@@ -126,7 +126,7 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="03a-quarkus-common.html#the-code">Common</a>
+    <a class="nav-link" href="03a-quarkus-common.html">Using H2</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="03a-quarkus-common.html#the-code">The code</a>
@@ -156,7 +156,7 @@
     <a class="nav-link" href="03b-quarkus-deploy-postgresql.html#run-local-remote-dev">Extending the inner-loop with remote development</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="03b-quarkus-deploy-postgresql.html#binary-deploy">Binary deploy S2I</a>
+    <a class="nav-link" href="03b-quarkus-deploy-postgresql.html#binary-deploy">Binary deploy (S2I)</a>
   </li>
 </ul>
   </li>
@@ -177,7 +177,7 @@
     <a class="nav-link" href="03c-quarkus-deploy-oracle.html#run-local-remote-dev">Extending the inner-loop with remote development</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="03c-quarkus-deploy-oracle.html#binary-deploy">Binary deploy S2I</a>
+    <a class="nav-link" href="03c-quarkus-deploy-oracle.html#binary-deploy">Binary deploy (S2I)</a>
   </li>
 </ul>
   </li>
@@ -226,7 +226,7 @@
 <h2 id="the-code"><a class="anchor" href="#the-code"></a>The code</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Our simple application exposes a CRUD interface for a table (<code>FRUIT</code>) in a relational database by using JPA and Hiebernate as the <code>ORM</code> framework. To do so, it uses JPA annotations like <code>@Entity</code>, <code>@Id</code>, etc. You can find the Java code of the JPA entity below.</p>
+<p>Our simple application exposes a CRUD interface for a table (<code>FRUIT</code>) in a relational database by using JPA and Hibernate as the <code>ORM</code> framework. To do so, it uses JPA annotations like <code>@Entity</code>, <code>@Id</code>, etc. You can find the Java code of the JPA entity below.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -240,7 +240,7 @@ In order to make the code more portable we have annotated the <code>id</code> at
 </tr>
 </table>
 </div>
-<div class="listingblock lines_7 console-input">
+<div class="listingblock lines_7">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Entity
 public class Fruit {
@@ -280,7 +280,7 @@ public class Fruit {
 <div class="paragraph">
 <p>The actual service is implemented in class <code>FruitController</code> find below a simplified version of the code. Nothing complicated here.</p>
 </div>
-<div class="listingblock lines_7 console-input">
+<div class="listingblock lines_7">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@RestController
 @RequestMapping(value = "/api/fruits")
@@ -369,7 +369,7 @@ mv java-inner-loop-dev-guide-master java-inner-loop-dev-guide</code></pre>
 <h2 id="maven-profiles"><a class="anchor" href="#maven-profiles"></a>Maven Profiles</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>As we stated at the begging we want to use different databases, <strong>H2</strong> to develop quickcly then either <strong>PostgreSQL</strong> or <strong>Oracle</strong> once the code is deployed in OpenShift. In order to do so we have defined 3 profiles:</p>
+<p>As we stated at the beginning we want to use different databases, <strong>H2</strong> to develop quickly then either <strong>PostgreSQL</strong> or <strong>Oracle</strong> once the code is deployed in OpenShift. In order to do so we have defined 3 profiles:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -454,7 +454,7 @@ spring.jpa.hibernate.ddl-auto=create</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>There are accordingly 3 different <code>import.sql</code> files, basically the motivation is the different way of refering to the next value of a database sequence.</p>
+<p>There are, accordingly, three different <code>import.sql</code> files, since each database has a different way of referring to the next value of a database sequence.</p>
 </div>
 <div class="tabset is-loading">
 <div class="ulist tabs">
@@ -506,7 +506,7 @@ insert into fruit (id, name) values (FRUIT_SEQ.NEXTVAL, 'Banana');</code></pre>
 <h2 id="run-local"><a class="anchor" href="#run-local"></a>Running the code locally against H2</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>One decision made for this example was to keep it as SQL-standard as possible so that we can move to different database as esasily as possible. I know, some times this is not possible or ideal&#8230;&#8203; but it&#8217;s ok for this example.</p>
+<p>One decision made for this example was to keep it as SQL-standard as possible so that we can move to different database as easily as possible. I know, sometimes this is not possible or ideal&#8230;&#8203; but it&#8217;s ok for this example.</p>
 </div>
 <div class="paragraph">
 <p>As we have said before in this guide you&#8217;ll not have to code, instead we&#8217;ll focus on running, testing, deploying, etc.</p>
@@ -566,10 +566,7 @@ insert into fruit (id, name) values (FRUIT_SEQ.NEXTVAL, 'Banana');</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Now open a browser and point to <a href="http://localhost:8080:">http://localhost:8080</a></p>
-</div>
-<div class="paragraph">
-<p>You should see this:</p>
+<p>Now open a browser and point to <a href="http://localhost:8080" target="_blank" rel="noopener">http://localhost:8080</a></p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -583,6 +580,9 @@ You can edit, save, delete to test the functionalities implemented by <code>Frui
 </tr>
 </table>
 </div>
+<div class="paragraph">
+<p>You should see this:</p>
+</div>
 <div class="imageblock">
 <div class="content">
 <img src="_images/fruit-service-h2-display.png" alt="Fruit Service on H2">
@@ -592,7 +592,7 @@ You can edit, save, delete to test the functionalities implemented by <code>Frui
 </div>
 <nav class="pagination">
   <span class="prev"><a href="01-setup.html" class="query-params-link">Setup</a></span>
-  <span class="next"><a href="02b-spring-boot-deploy-postgresql.html" class="query-params-link">PostgreSQL as Database</a></span>
+  <span class="next"><a href="02b-spring-boot-deploy-postgresql.html" class="query-params-link">Using PostgreSQL</a></span>
 </nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
