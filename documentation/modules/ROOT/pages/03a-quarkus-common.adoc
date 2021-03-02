@@ -13,7 +13,6 @@ Note how simplified the code is, the only method there is a custom query `getAll
 ===============================
 
 [.lines_7]
-[.console-input]
 [source, java]
 ----
 @Entity
@@ -34,7 +33,6 @@ public class Fruit extends PanacheEntityBase {
 The actual `REST` service is implemented in class `FruitResource` find below a simplified version of the code. Nothing complicated here, just using the inherited methods of the `Fruit` entity si enough.
 
 [.lines_7]
-[.console-input]
 [source, java]
 ----
 @Path("/fruit")
