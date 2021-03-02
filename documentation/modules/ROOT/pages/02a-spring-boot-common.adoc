@@ -4,12 +4,11 @@ include::_attributes.adoc[]
 [#the-code]
 == The code
 
-Our simple application exposes a CRUD interface for a table (`FRUIT`) in a relational database by using JPA and Hiebernate as the `ORM` framework. To do so, it uses JPA annotations like `@Entity`, `@Id`, etc. You can find the Java code of the JPA entity below.
+Our simple application exposes a CRUD interface for a table (`FRUIT`) in a relational database by using JPA and Hibernate as the `ORM` framework. To do so, it uses JPA annotations like `@Entity`, `@Id`, etc. You can find the Java code of the JPA entity below.
 
 NOTE: In order to make the code more portable we have annotated the `id` attribute so that the value is generated using a sequence named `FRUIT_SEQ`. 
 
 [.lines_7]
-[.console-input]
 [source, java]
 ----
 @Entity
@@ -50,7 +49,6 @@ public class Fruit {
 The actual service is implemented in class `FruitController` find below a simplified version of the code. Nothing complicated here.
 
 [.lines_7]
-[.console-input]
 [source, java]
 ----
 @RestController
@@ -124,7 +122,7 @@ cd {git_uri}/apps/spring-boot-app
 [#maven-profiles]
 == Maven Profiles
 
-As we stated at the begging we want to use different databases, *H2* to develop quickcly then either *PostgreSQL* or *Oracle* once the code is deployed in OpenShift. In order to do so we have defined 3 profiles:
+As we stated at the beginning we want to use different databases, *H2* to develop quickly then either *PostgreSQL* or *Oracle* once the code is deployed in OpenShift. In order to do so we have defined 3 profiles:
 
 * *local* for H2
 * *openshift-postgresql* for PostgreSQL
@@ -186,7 +184,7 @@ spring.jpa.hibernate.ddl-auto=create
 --
 ====
 
-There are accordingly 3 different `import.sql` files, basically the motivation is the different way of refering to the next value of a database sequence.
+There are, accordingly, three different `import.sql` files, since each database has a different way of referring to the next value of a database sequence.
 
 [tabs]
 ====
@@ -222,7 +220,7 @@ insert into fruit (id, name) values (FRUIT_SEQ.NEXTVAL, 'Banana');
 [#run-local]
 == Running the code locally against H2
 
-One decision made for this example was to keep it as SQL-standard as possible so that we can move to different database as esasily as possible. I know, some times this is not possible or ideal... but it's ok for this example.
+One decision made for this example was to keep it as SQL-standard as possible so that we can move to different database as easily as possible. I know, sometimes this is not possible or ideal... but it's ok for this example.
 
 As we have said before in this guide you'll not have to code, instead we'll focus on running, testing, deploying, etc.
 
@@ -270,11 +268,11 @@ Also the `import.sql` file used => *Executing import script 'file:/Users/nostrom
 2021-01-28 INFO 59429 --- [  restartedMain] dev.snowdrop.example.ExampleApplication  : Started ExampleApplication in 3.632 seconds (JVM running for 4.2)
 ----
 
-Now open a browser and point to link:http://localhost:8080:[http://localhost:8080]
-
-You should see this:
+Now open a browser and point to link:http://localhost:8080[http://localhost:8080, window=_blank]
 
 TIP: You can edit, save, delete to test the functionalities implemented by `FruitController`
+
+You should see this:
 
 image::fruit-service-h2-display.png[Fruit Service on H2]
 

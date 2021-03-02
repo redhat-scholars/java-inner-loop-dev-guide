@@ -6,15 +6,15 @@ include::_attributes.adoc[]
 This time we're going to install Oracle in a different namespace to make it look as an external database.
 
 [#deploy-database]
-== Deploying Oracle on OCP
+== Deploying Oracle on OpenShift
 
-NOTE: You need credentials in the link:https://container-registry.oracle.com/pls/apex/f?p=113:1:113820723533011:::1:P1_BUSINESS_AREA:3:[Oracle Container Registry] in order to download Oracle DB images.
+NOTE: You need credentials for the link:https://container-registry.oracle.com/pls/apex/f?p=113:1:113820723533011:::1:P1_BUSINESS_AREA:3:[Oracle Container Registry] in order to download Oracle DB images.
 
 WARNING: You may need to delete/adjust Limit Ranges in `$\{ORACLE_DB_PROJECT_NAME}` project because the deployment object will request 4Gi.
 
 Please run these commands as cluster-admin to deploy Oracle DB:
 
-IMPORTANT: The OCI image to be downloaded is quite big, to grab a cup of coffee and keep calm.
+IMPORTANT: The Oracle database image to be downloaded is quite big, so grab a cup of coffee and be patient.
 
 .Create a project to deploy Oracle DB
 [.console-input]
@@ -58,16 +58,16 @@ oc create secret docker-registry oracle-registry \
 oc apply -f ./k8s/oracle-db.yaml -n $\{ORACLE_DB_PROJECT_NAME}
 ----
 
-NOTE: Once the container is running again be calm, after starting the DB daemon data needs to be copied. In total it could take more than 10 mins.
+NOTE: Once the container is running again be patient, after starting the DB daemon data needs to be copied, this could take more than 10 minutes.
 
-To have a look to the logs do this.
+To check activity, use the logs:
 [.console-input]
 [source,bash,options="nowrap",subs="attributes+"]
 ----
 oc logs -f $(oc get pods -o json | jq -r '.items[] | select(.metadata.name | test("oracle-db")).metadata.name') -n $\{ORACLE_DB_PROJECT_NAME}
 ----
 
-If you see this you're on your way to get it working.
+If you see this in the logs then you are progressing well:
 [.console-output]
 [source,bash,options="nowrap",subs="attributes+"]
 ----
@@ -161,7 +161,7 @@ oc rsh $(oc get pods -o json | jq -r '.items[] | select(.metadata.name | test("o
 
 Now that you're connected to the container run this command...
 
-NOTE: Prompt should look like this => `sh-4.2$`
+NOTE: The prompt look like this => `sh-4.2$`
 
 [.console-input]
 [source,bash,options="nowrap",subs="attributes+"]
@@ -228,7 +228,7 @@ Grant succeeded.
 Nice! You're Oracle DB is up and running, initialized and the DB Schema has been created. You can exit `sqplplus` and the container.
 
 [#deploy-code]
-== Deploying the code on OCP
+== Deploying the code on OpenShift
 
 IMPORTANT: Now resume as a normal user, no need to be `cluster-admin` anymore.
 
@@ -404,7 +404,7 @@ oc adm policy add-scc-to-user anyuid -z default -n $\{PROJECT_NAME}
 ----
 ===============================
 
-NOTE: Telepresence will modify the network so that Services in Kubernetes are reachable from your laptop and viceversa. 
+NOTE: Telepresence will modify the network so that Services in Kubernetes are reachable from your laptop and vice versa. 
 
 The next command will result in the deployment for our application being scaled down to zero and the network altered so that traffic to it ends up in your laptop in port `8080`.
 
@@ -465,11 +465,11 @@ SERVICE_DB_USER=luke SERVICE_DB_PASSWORD=secret SERVICE_DB_NAME=FRUITSDB SERVICE
   mvn clean spring-boot:run -Dspring-boot.run.profiles=openshift-oracle -Popenshift-oracle
 ----
 
-Now open a browser and point to link:http://localhost:8080:[http://localhost:8080]
-
-You should see this:
+Now open a browser and point to link:http://localhost:8080[http://localhost:8080, window=_blank]
 
 TIP: You can edit, save, delete to test the functionalities implemented by `FruitController`
+
+You should see this:
 
 image::fruit-service-oracle-display.png[Fruit Service on PostgreSQL]
 

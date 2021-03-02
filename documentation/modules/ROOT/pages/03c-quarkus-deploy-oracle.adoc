@@ -7,15 +7,15 @@ include::_attributes.adoc[]
 This time we're going to install Oracle in a different namespace to make it look as an external database.
 
 [#deploy-database]
-== Deploying Oracle on OCP
+== Deploying Oracle on OpenShift
 
-NOTE: You need credentials in the link:https://container-registry.oracle.com/pls/apex/f?p=113:1:113820723533011:::1:P1_BUSINESS_AREA:3:[Oracle Container Registry] in order to download Oracle DB images.
+NOTE: You need credentials for the link:https://container-registry.oracle.com/pls/apex/f?p=113:1:113820723533011:::1:P1_BUSINESS_AREA:3:[Oracle Container Registry] in order to download Oracle DB images.
 
 WARNING: You may need to delete/adjust Limit Ranges in `$\{ORACLE_DB_PROJECT_NAME}` project because the deployment object will request 4Gi.
 
 Please run these commands as cluster-admin to deploy Oracle DB:
 
-IMPORTANT: The OCI image to be downloaded is quite big, to grab a cup of coffee and keep calm.
+IMPORTANT: The Oracle database image to be downloaded is quite big, so grab a cup of coffee and be patient.
 
 .Create a project to deploy Oracle DB
 [.console-input]
@@ -65,7 +65,7 @@ oc create secret docker-registry oracle-registry \
 oc apply -f ./k8s/oracle-db.yaml -n $\{ORACLE_DB_PROJECT_NAME}
 ----
 
-NOTE: Once the container is running again be calm, after starting the DB daemon data needs to be copied. In total it could take more than 10 mins.
+NOTE: Once the container is running again be patient, after starting the DB daemon data needs to be copied, this could take more than 10 minutes.
 
 You can have a look to the logs running this command (pay attention to the warning sign):
 
@@ -186,7 +186,7 @@ oc rsh $(oc get pods -o json | jq -r '.items[] | select(.metadata.name | test("o
 
 Now that you're connected to the container run this command...
 
-NOTE: Prompt should look like this => `sh-4.2$`
+NOTE: The prompt look like this => `sh-4.2$`
 
 [.console-input]
 [source,bash,options="nowrap",subs="attributes+"]
@@ -253,7 +253,7 @@ Grant succeeded.
 Nice! You're Oracle DB is up and running, initialized and the DB Schema has been created. You can exit `sqplplus` and the container.
 
 [#deploy-code]
-== Deploying the code on OCP
+== Deploying the code on OpenShift
 
 IMPORTANT: Now resume as a normal user, no need to be `cluster-admin` anymore.
 
@@ -318,7 +318,7 @@ Move to the OpenShift web console and from `Topology` in the `Developer` perspec
 
 image::fruit-service-oracle-topology-quarkus.png[Fruit Service on Oracle Topology]
 
-You should see this.
+You should see this:
 
 image::fruit-service-oracle-display-quarkus.png[Fruit Service on Oracle]
 
@@ -338,7 +338,7 @@ oc adm policy add-scc-to-user anyuid -z default -n $\{PROJECT_NAME}
 ----
 ===============================
 
-NOTE: Telepresence will modify the network so that Services in Kubernetes are reachable from your laptop and viceversa. 
+NOTE: Telepresence will modify the network so that Services in Kubernetes are reachable from your laptop and vice versa. 
 
 The next command will result in the deployment for our application being scaled down to zero and the network altered so that traffic to it ends up in your laptop in port `8080`.
 
@@ -415,9 +415,9 @@ DB_USER=luke DB_PASSWORD=secret mvn quarkus:dev -Dquarkus.profile={active_profil
 
 Now open a browser and point to link:http://localhost:8080[http://localhost:8080, window=_blank]
 
-You should see this:
-
 TIP: You can edit, save, delete to test the functionalities implemented by `FruitResource` *and debug locally*.
+
+You should see this:
 
 IMPORTANT: You can also use the external route and get the same result.
 
@@ -444,7 +444,7 @@ If you use Quarkus there's another method to extend the inner-loop to your clust
 
 There are two parts in this setup:
 
-* The server side, where the code runs in a container (in OpenShift for instance)
+* The server side, where the code runs in a container
 * The client side, where you connect to the server side and files are watched and uploaded whenever changes are detected
 
 A couple of things to take into account regarding the server side:

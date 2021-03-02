@@ -4,10 +4,10 @@ include::_attributes.adoc[]
 :project_name: %USERNAME%-{artifact_id}-{database_name}
 :active_profile: prod-{database_name}
 
-So before we deploy the code we need a Database right? For the sake of simplicity let's deploy PostgreSQL using some simple commands. Maybe in your real deployment you'd use an external instance, sure, we take that into account in the 
+So before we deploy the code we need a Database right? For the sake of simplicity let's deploy PostgreSQL using some simple commands. Maybe in your real deployment you would use an external instance. 
 
 [#deploy-database]
-== Deploying PostgreSQL on OCP
+== Deploying PostgreSQL on OpenShift
 
 WARNING: Before proceeding log in your cluster using `oc login` with a normal user no need for special permissions.
 
@@ -20,7 +20,7 @@ export PROJECT_NAME={project_name}
 oc new-project $\{PROJECT_NAME}
 ----
 
-In order for the application to work properly we'll first deploy a `PostgreSQL` database, then the code, to do so run these commands:
+In order for the application to work properly we must first deploy a `PostgreSQL` database, like this:
 
 [.console-input]
 [source,bash,options="nowrap",subs="attributes+"]
@@ -29,7 +29,7 @@ oc new-app -e POSTGRESQL_USER=luke -e POSTGRESQL_PASSWORD=secret -e POSTGRESQL_D
   centos/postgresql-10-centos7 --as-deployment-config=true --name=postgresql-db -n $\{PROJECT_NAME}
 ----
 
-Now let's label the deployment so that it look better in the web console:
+Now let's add some labels to the database deployment object:
 
 [.console-input]
 [source,bash,options="nowrap",subs="attributes+"]
@@ -66,7 +66,7 @@ oc get pods -n $\{PROJECT_NAME} -o json | jq -r '.items[] | select(.status.phase
 ===============================
 
 [#deploy-code]
-== Deploying the code on OCP
+== Deploying the code on OpenShift
 
 [.console-input]
 [source,bash,options="nowrap",subs="attributes+"]
@@ -98,7 +98,7 @@ oc adm policy add-scc-to-user anyuid -z default -n $\{PROJECT_NAME}
 ----
 ===============================
 
-NOTE: Telepresence will modify the network so that Services in Kubernetes are reachable from your laptop and viceversa. 
+NOTE: Telepresence will modify the network so that Services in Kubernetes are reachable from your laptop and vice versa. 
 
 The next command will result in the deployment for our application being scaled down to zero and the network altered so that traffic to it ends up in your laptop in port `8080`.
 
@@ -164,9 +164,9 @@ DB_USER=luke DB_PASSWORD=secret mvn quarkus:dev -Dquarkus.profile={active_profil
 
 Now open a browser and point to link:http://localhost:8080[http://localhost:8080, window=_blank]
 
-You should see this:
-
 TIP: You can edit, save, delete to test the functionalities implemented by `FruitResource` *and debug locally*.
+
+You should see this:
 
 IMPORTANT: You can also use the external route and get the same result.
 
@@ -193,7 +193,7 @@ If you use Quarkus there's another method to extend the inner-loop to your clust
 
 There are two parts in this setup:
 
-* The server side, where the code runs in a container (in OpenShift for instance)
+* The server side, where the code runs in a container
 * The client side, where you connect to the server side and files are watched and uploaded whenever changes are detected
 
 A couple of things to take into account regarding the server side:

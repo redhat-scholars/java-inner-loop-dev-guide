@@ -3,10 +3,10 @@ include::_attributes.adoc[]
 :database_name: postgresql
 :project_name: %USERNAME%-{artifact_id}-{database_name}
 
-So before we deploy the code we need a Database right? For the sake of simplicity let's deploy PostgreSQL using some simple commands. Maybe in your real deployment you'd use an external instance, sure, we take that into account in the 
+So before we deploy the code we need a Database right? For the sake of simplicity let's deploy PostgreSQL using some simple `oc` commands. Maybe in your real deployment you would use an external instance. 
 
 [#deploy-database]
-== Deploying PostgreSQL on OCP
+== Deploying PostgreSQL on OpenShift
 
 WARNING: Before proceeding log in your cluster using `oc login` with a normal user no need for special permissions.
 
@@ -19,7 +19,7 @@ export PROJECT_NAME={project_name}
 oc new-project $\{PROJECT_NAME}
 ----
 
-In order for the application to work properly we'll first deploy a `PostgreSQL` database, then the code, to do so run these commands:
+In order for the application to work properly we must first deploy a `PostgreSQL` database, like this:
 
 [.console-input]
 [source,bash,options="nowrap",subs="attributes+"]
@@ -28,7 +28,7 @@ oc new-app -e POSTGRESQL_USER=luke -e POSTGRESQL_PASSWORD=secret -e POSTGRESQL_D
   centos/postgresql-10-centos7 --as-deployment-config=true --name=postgresql-db -n $\{PROJECT_NAME}
 ----
 
-Now let's label the deployment so that it look better in the web console:
+Now let's add some labels to the database deployment object:
 
 [.console-input]
 [source,bash,options="nowrap",subs="attributes+"]
@@ -65,7 +65,7 @@ oc get pods -n $\{PROJECT_NAME} -o json | jq -r '.items[] | select(.status.phase
 ===============================
 
 [#deploy-code]
-== Deploying the code on OCP
+== Deploying the code on OpenShift
 
 [.console-input]
 [source,bash,options="nowrap",subs="attributes+"]
@@ -97,7 +97,7 @@ oc adm policy add-scc-to-user anyuid -z default -n $\{PROJECT_NAME}
 ----
 ===============================
 
-NOTE: Telepresence will modify the network so that Services in Kubernetes are reachable from your laptop and viceversa. 
+NOTE: Telepresence will modify the network so that Services in Kubernetes are reachable from your laptop and vice versa. 
 
 The next command will result in the deployment for our application being scaled down to zero and the network altered so that traffic to it ends up in your laptop in port `8080`.
 
@@ -158,11 +158,11 @@ SERVICE_DB_USER=luke SERVICE_DB_PASSWORD=secret SERVICE_DB_NAME=FRUITSDB SERVICE
   mvn clean spring-boot:run -Dspring-boot.run.profiles=openshift-postgresql -Popenshift-postgresql
 ----
 
-Now open a browser and point to link:http://localhost:8080:[http://localhost:8080]
-
-You should see this:
+Now open a browser and point to link:http://localhost:8080[http://localhost:8080, window=_blank]
 
 TIP: You can edit, save, delete to test the functionalities implemented by `FruitController`
+
+You should see this:
 
 image::fruit-service-postgresql-display.png[Fruit Service on PostgreSQL]
 
