@@ -19,13 +19,13 @@ package dev.snowdrop.example;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.Matchers.isEmptyString;
 
 import io.restassured.http.ContentType;
 import java.net.URL;
 import java.util.Collections;
 import org.arquillian.cube.openshift.impl.enricher.AwaitRoute;
 import org.arquillian.cube.openshift.impl.enricher.RouteURL;
+import org.hamcrest.Matchers;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,7 +49,7 @@ public class OpenShiftIT {
                    .post(FRUITS_PATH)
                    .then()
                    .statusCode(201)
-                   .body("id", not(isEmptyString()))
+                   .body("id", not(is(Matchers.emptyString())))
                    .body("name", is("Lemon"))
                    .extract()
                    .response()

@@ -20,7 +20,6 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.Matchers.isEmptyString;
 import static org.junit.Assert.assertFalse;
 
 import dev.snowdrop.example.service.Fruit;
@@ -29,6 +28,8 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import java.util.Collections;
+
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -103,7 +104,7 @@ public class ExampleApplicationTest {
                 .post()
                 .then()
                 .statusCode(201)
-                .body("id", not(isEmptyString()))
+                .body("id", not(is(Matchers.emptyString())))
                 .body("name", is("Cherry"));
     }
 
