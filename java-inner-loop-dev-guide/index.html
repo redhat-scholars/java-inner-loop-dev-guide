@@ -60,6 +60,9 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="01-setup.html#prerequisite">Prerequisites</a>
   </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="01-setup.html#preliminary-tests">Preliminary Tests</a>
+  </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
@@ -246,7 +249,7 @@ Kubernetes cluster"</p>
 <p>In general we all agree these distributed architectures have lots of benefits but also pose some challenges. One of those challenges we’d like to <strong>highlight here is the problem a developer has to face when developing kubernetes native applications</strong>.</p>
 </div>
 <div class="paragraph">
-<p>The truth is that, even though you will evetually run your code inside a kubernetes cluster, you still develop (in general) locally where you have your IDE, compilers, etc. There are several ways to explain the development cycle, for example.</p>
+<p>The truth is that, even though you will eventually run your code inside a kubernetes cluster, you still develop (in general) locally where you have your IDE, compilers, etc. There are several ways to explain the development cycle, for example.</p>
 </div>
 <div class="quoteblock">
 <blockquote>
@@ -320,7 +323,7 @@ Kubernetes cluster"</p>
 <p>Nowadays, given the distributed nature of applications, <strong>developers find themselves dealing with a plethora of services they need to integrate with</strong> at development time. <strong>So the challenge is for those services to be accessible/available and sometimes this is not easy</strong>.</p>
 </div>
 <div class="paragraph">
-<p>Let&#8217;s review some of the approches you can take in order to mitigate this problem.</p>
+<p>Let&#8217;s review some of the approaches you can take in order to mitigate this problem.</p>
 </div>
 </div>
 </div>
@@ -398,6 +401,87 @@ No worries if you don&#8217;t have an Oracle database at hand, we&#8217;ll show 
 </tr>
 </table>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="lab-parameters"><a class="anchor" href="#lab-parameters"></a>Lab parameters</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This lab has requires you to have access to an OpenShift cluster. This cluster can be remote or local if you use <a href="https://developers.redhat.com/products/codeready-containers/overview" target="_blank" rel="noopener"><strong>CodeReady Containers</strong></a> or <strong>CRC</strong> for short.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Use this <a href="https://cloud.redhat.com/openshift/create/local" target="_blank" rel="noopener">link</a> if you want to jump directly to the instructions to download and install <strong>CRC</strong>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Throughout the guide you&#8217;ll find URLs and commands crafted for your user and cluster, in order to make the experience as smooth as possible it would be great if you could craft a URL including the next variables and values.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-center valign-top"><strong>Key</strong></th>
+<th class="tableblock halign-center valign-top"><strong>Value</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">USERNAME</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">developer</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">PASSWORD</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">developer</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">CLUSTER_SUBDOMAIN</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">apps-crc.testing</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>If you add the above variables to this lab url you will end up with something like this: <a href="https://redhat-scholars.github.io/java-inner-loop-dev-guide?USERNAME=developer&amp;PASSWORD=developer&amp;CLUSTER_SUBDOMAIN=apps-crc.testing#lab-parameters" target="_blank" rel="noopener">https://redhat-scholars.github.io/java-inner-loop-dev-guide?USERNAME=developer&amp;PASSWORD=developer&amp;CLUSTER_SUBDOMAIN=apps-crc.testing</a></p>
+</div>
+<div class="paragraph">
+<p>If you click on the link above or have already added the mentioned variables you will see correct values below, if that&#8217;s not the case you will see <strong>'%'</strong> signs surrounding variables names as values.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-center valign-top"><strong>Key</strong></th>
+<th class="tableblock halign-center valign-top"><strong>Value</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">USERNAME</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">%USERNAME%</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">PASSWORD</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">%PASSWORD%</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">CLUSTER_SUBDOMAIN</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">%CLUSTER_SUBDOMAIN%</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect1 tiles browse">

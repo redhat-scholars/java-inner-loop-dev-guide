@@ -60,6 +60,9 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="01-setup.html#prerequisite">Prerequisites</a>
   </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="01-setup.html#preliminary-tests">Preliminary Tests</a>
+  </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
@@ -665,7 +668,7 @@ EOF</code></pre>
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-bash hljs" data-lang="bash">oc adm policy add-scc-to-user privileged -z default -n ${PROJECT_NAME}
+<pre class="highlightjs highlight nowrap"><code class="language-bash hljs" data-lang="bash">oc adm policy add-scc-to-user privileged -z default -n ${PROJECT_NAME} &amp;&amp; \
 oc adm policy add-scc-to-user anyuid -z default -n ${PROJECT_NAME}</code></pre>
 </div>
 </div>
@@ -718,7 +721,7 @@ telepresence --swap-deployment atomic-fruit-service --expose 8080</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Evetually you&#8217;ll se something like this:</p>
+<p>Eventually you&#8217;ll se something like this:</p>
 </div>
 <div class="listingblock console-output">
 <div class="content">
@@ -753,7 +756,7 @@ Our deployment has been scaled down to zero and substituted by a pod generated b
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="_images/fruit-service-oracle-topology-telepresence-quarkus.png" alt="Fruit Service on PostgreSQL Topology - Quarkus with Telepresence">
+<img src="_images/fruit-service-oracle-topology-telepresence-quarkus.png" alt="Fruit Service on Oracle Topology - Quarkus with Telepresence">
 </div>
 </div>
 <div class="admonitionblock tip">

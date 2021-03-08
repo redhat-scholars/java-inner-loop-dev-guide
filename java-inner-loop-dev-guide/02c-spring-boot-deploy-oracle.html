@@ -61,6 +61,9 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="01-setup.html#prerequisite">Prerequisites</a>
   </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="01-setup.html#preliminary-tests">Preliminary Tests</a>
+  </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
@@ -226,13 +229,8 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>This time we&#8217;re going to install Oracle in a different namespace to make it look as an external database.</p>
+<p>This part of the lab is different compared to the previous one where we deployed PostgreSQL alongside the code. This time we’re going to install the database (Oracle) in a different namespace to make it look as an external database. The Oracle database is quite large, it takes a while to download and install. You will also need an account in <a href="https://container-registry.oracle.com/pls/apex/f?p=113:1:113820723533011:::1:P1_BUSINESS_AREA:3:" target="_blank" rel="noopener">Oracle Container Registry</a> to access it.</p>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="deploy-database"><a class="anchor" href="#deploy-database"></a>Deploying Oracle on OpenShift</h2>
-<div class="sectionbody">
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -240,23 +238,16 @@
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-You need credentials for the <a href="https://container-registry.oracle.com/pls/apex/f?p=113:1:113820723533011:::1:P1_BUSINESS_AREA:3:">Oracle Container Registry</a> in order to download Oracle DB images.
+If you don&#8217;t have an Oracle Account you can create one <a href="https://profile.oracle.com/myprofile/account/create-account.jspx" target="_blank" rel="noopener">here</a>.
 </td>
 </tr>
 </table>
 </div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-You may need to delete/adjust Limit Ranges in <code>${ORACLE_DB_PROJECT_NAME}</code> project because the deployment object will request 4Gi.
-</td>
-</tr>
-</table>
 </div>
+</div>
+<div class="sect1">
+<h2 id="deploy-database"><a class="anchor" href="#deploy-database"></a>Deploying Oracle on OpenShift</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Please run these commands as cluster-admin to deploy Oracle DB:</p>
 </div>
@@ -287,10 +278,15 @@ oc new-project ${ORACLE_DB_PROJECT_NAME}</code></pre>
 </div>
 </div>
 <div class="listingblock console-input">
-<div class="title">Type in your user/email in the Oracle Container Regisry</div>
+<div class="title">Type in your user/email in the Oracle Container Registry</div>
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-bash hljs" data-lang="bash">echo -n "Reg. Email: " &amp;&amp; read email
-echo -n "Reg. Password: " &amp;&amp; read -s password</code></pre>
+<pre class="highlightjs highlight nowrap"><code class="language-bash hljs" data-lang="bash">echo -n "Reg. Email: " &amp;&amp; read email</code></pre>
+</div>
+</div>
+<div class="listingblock console-input">
+<div class="title">Type in your password in the Oracle Container Registry</div>
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-bash hljs" data-lang="bash">echo -n "Reg. Password: " &amp;&amp; read -s password</code></pre>
 </div>
 </div>
 <div class="listingblock console-input">
@@ -302,6 +298,18 @@ echo -n "Reg. Password: " &amp;&amp; read -s password</code></pre>
   --docker-password=${password} \
   --docker-email=${email} -n ${ORACLE_DB_PROJECT_NAME}</code></pre>
 </div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+The next step may fail because of lack of resources, you may need to delete/adjust Limit Ranges in the target namespace because the deployment object will request 4Gi.
+</td>
+</tr>
+</table>
 </div>
 <div class="listingblock console-input">
 <div class="title">Finally deploy Oracle DB</div>
@@ -441,7 +449,7 @@ The prompt look like this &#8658; <code>sh-4.2$</code>
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-bash hljs" data-lang="bash">sqlplus system/Kube#2020@localhost:1521/${ORACLE_PDB}</code></pre>
+<pre class="highlightjs highlight nowrap"><code class="language-text hljs" data-lang="text">sqlplus system/Kube#2020@localhost:1521/${ORACLE_PDB}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -539,8 +547,10 @@ Now resume as a normal user, no need to be <code>cluster-admin</code> anymore.
 oc new-project ${PROJECT_NAME}</code></pre>
 </div>
 </div>
+<div class="sect2">
+<h3 id="define-external-service"><a class="anchor" href="#define-external-service"></a>Define the database service as external</h3>
 <div class="paragraph">
-<p>We want to connect to the Oracle DB as if it were external, so let&#8217;d create a Service using a external name:</p>
+<p>We want to connect to the Oracle DB as if it were external, so let&#8217;s create a <code>Service</code> using a external name:</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
@@ -562,7 +572,7 @@ EOF</code></pre>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-This is not the only way, you could create a service with no selector and point to an external but reacheable IP address, as in this example. We cannot use this apporach because the IP of our Oracle DB is internal and this is not allowed. Here you are an example.
+This is not the only way, you could create a service with no selector and point to an external but reachable IP address, as in this example. We cannot use this approach because the IP of our Oracle DB is internal and this is not allowed. Here you are an example.
 </td>
 </tr>
 </table>
@@ -708,6 +718,7 @@ mvn clean oc:deploy -Popenshift-oracle -DskipTests</code></pre>
 </div>
 </div>
 </div>
+</div>
 <div class="sect1">
 <h2 id="run-local-telepresence"><a class="anchor" href="#run-local-telepresence"></a>Extending the inner-loop with Telepresence</h2>
 <div class="sectionbody">
@@ -724,7 +735,7 @@ mvn clean oc:deploy -Popenshift-oracle -DskipTests</code></pre>
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-bash hljs" data-lang="bash">oc adm policy add-scc-to-user privileged -z default -n ${PROJECT_NAME}
+<pre class="highlightjs highlight nowrap"><code class="language-bash hljs" data-lang="bash">oc adm policy add-scc-to-user privileged -z default -n ${PROJECT_NAME} &amp;&amp; \
 oc adm policy add-scc-to-user anyuid -z default -n ${PROJECT_NAME}</code></pre>
 </div>
 </div>
@@ -746,6 +757,12 @@ Telepresence will modify the network so that Services in Kubernetes are reachabl
 </div>
 <div class="paragraph">
 <p>The next command will result in the deployment for our application being scaled down to zero and the network altered so that traffic to it ends up in your laptop in port <code>8080</code>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/fruit-service-oracle-topology-telepresence.png" alt="Fruit Service on Oracle Topology - Spring Boot with Telepresence">
+</div>
+<div class="title">Figure 1. Deployment scaled down to zero while using Telepresence</div>
 </div>
 <div class="admonitionblock important">
 <table>

@@ -61,6 +61,9 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="01-setup.html#prerequisite">Prerequisites</a>
   </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="01-setup.html#preliminary-tests">Preliminary Tests</a>
+  </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
@@ -353,7 +356,7 @@ postgresql-db-1-n585q       1/1     Running     0          2d6h</code></pre>
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-bash hljs" data-lang="bash">oc adm policy add-scc-to-user privileged -z default -n ${PROJECT_NAME}
+<pre class="highlightjs highlight nowrap"><code class="language-bash hljs" data-lang="bash">oc adm policy add-scc-to-user privileged -z default -n ${PROJECT_NAME} &amp;&amp; \
 oc adm policy add-scc-to-user anyuid -z default -n ${PROJECT_NAME}</code></pre>
 </div>
 </div>
@@ -376,6 +379,12 @@ Telepresence will modify the network so that Services in Kubernetes are reachabl
 <div class="paragraph">
 <p>The next command will result in the deployment for our application being scaled down to zero and the network altered so that traffic to it ends up in your laptop in port <code>8080</code>.</p>
 </div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/fruit-service-postgresql-topology-telepresence.png" alt="Fruit Service on PostgreSQL Topology - Quarkus with Telepresence">
+</div>
+<div class="title">Figure 1. Deployment scaled down to zero while using Telepresence</div>
+</div>
 <div class="admonitionblock important">
 <table>
 <tr>
@@ -396,7 +405,7 @@ telepresence --swap-deployment atomic-fruit-service --expose 8080</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Evetually you&#8217;ll se something like this:</p>
+<p>Eventually you&#8217;ll se something like this:</p>
 </div>
 <div class="listingblock console-output">
 <div class="content">

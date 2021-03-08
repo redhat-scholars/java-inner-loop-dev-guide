@@ -61,6 +61,9 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="01-setup.html#prerequisite">Prerequisites</a>
   </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="01-setup.html#preliminary-tests">Preliminary Tests</a>
+  </li>
 </ul>
   </li>
   <li class="nav-item is-current-page" data-depth="1">
@@ -325,6 +328,18 @@ public class FruitController {
 <div class="paragraph">
 <p>Time to get our hands dirty. Clone or download the code, your choice.</p>
 </div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Choose a folder to put the code into and stick to it till the end of the guide. All paths are relative to this folder.
+</td>
+</tr>
+</table>
+</div>
 <div class="tabset is-loading">
 <div class="ulist tabs">
 <ul>
@@ -383,6 +398,18 @@ mv java-inner-loop-dev-guide-master java-inner-loop-dev-guide</code></pre>
 <p><strong>openshift-oracle</strong> for Oracle</p>
 </li>
 </ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+As usual you can find those profiles at: <code>src/main/resources</code>.
+</td>
+</tr>
+</table>
 </div>
 <div class="tabset is-loading">
 <div class="ulist tabs">
@@ -453,8 +480,25 @@ spring.jpa.hibernate.ddl-auto=create</code></pre>
 </div>
 </div>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="import-files"><a class="anchor" href="#import-files"></a>Import files</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>There are, accordingly, three different <code>import.sql</code> files, since each database has a different way of referring to the next value of a database sequence.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+You can find import files here: <code>src/main/resources</code>.
+</td>
+</tr>
+</table>
 </div>
 <div class="tabset is-loading">
 <div class="ulist tabs">
@@ -529,12 +573,15 @@ insert into fruit (id, name) values (FRUIT_SEQ.NEXTVAL, 'Banana');</code></pre>
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-<div class="title">TIPS</div>
-<div class="paragraph">
-<p>Pay attention to the profile in use &#8658; <strong>The following profiles are active: <code>local</code></strong>.</p>
-</div>
-<div class="paragraph">
-<p>Also the <code>import.sql</code> file used &#8658; <strong>Executing import script 'file:/Users/nostromo/&#8230;&#8203;/import-h2.sql'</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Pay attention to the profile in use: <strong>The following profiles are active: <code>local</code></strong>.</p>
+</li>
+<li>
+<p>Also the <code>import.sql</code> file used: <strong>Executing import script 'file:/Users/nostromo/&#8230;&#8203;/import-h2.sql'</strong></p>
+</li>
+</ul>
 </div>
 </td>
 </tr>
@@ -587,6 +634,9 @@ You can edit, save, delete to test the functionalities implemented by <code>Frui
 <div class="content">
 <img src="_images/fruit-service-h2-display.png" alt="Fruit Service on H2">
 </div>
+</div>
+<div class="paragraph">
+<p>Now you can stop the process with <span class="keyseq"><kbd>Ctrl</kbd>+<kbd>C</kbd></span> and go on with the lab.</p>
 </div>
 </div>
 </div>
