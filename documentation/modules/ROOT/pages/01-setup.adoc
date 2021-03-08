@@ -8,6 +8,8 @@ include::prerequisites.adoc[]
 
 include::prerequisites-optional.adoc[]
 
+include::preliminary-tests.adoc[]
+
 // [#minikube]
 // == Setup Kubernetes
 // 

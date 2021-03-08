@@ -1,5 +1,6 @@
 * xref:01-setup.adoc[Setup]
 ** xref:01-setup.adoc#prerequisite[Prerequisites]
+** xref:01-setup.adoc#preliminary-tests[Preliminary Tests]
 //** xref:01-setup.adoc#minikube[Setup Minikube]
 
 * xref:02a-spring-boot-common.adoc[Spring Boot Inner-Loop]

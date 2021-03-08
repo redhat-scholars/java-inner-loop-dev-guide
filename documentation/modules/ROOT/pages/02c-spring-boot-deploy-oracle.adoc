@@ -3,14 +3,12 @@ include::_attributes.adoc[]
 :database_name: oracle
 :project_name: %USERNAME%-{artifact_id}-{database_name}
 
-This time we're going to install Oracle in a different namespace to make it look as an external database.
+This part of the lab is different compared to the previous one where we deployed PostgreSQL alongside the code. This time we’re going to install the database (Oracle) in a different namespace to make it look as an external database. The Oracle database is quite large, it takes a while to download and install. You will also need an account in link:https://container-registry.oracle.com/pls/apex/f?p=113:1:113820723533011:::1:P1_BUSINESS_AREA:3:[Oracle Container Registry, window=_blank] to access it.
+
+NOTE: If you don't have an Oracle Account you can create one link:https://profile.oracle.com/myprofile/account/create-account.jspx[here, window=_blank].
 
 [#deploy-database]
 == Deploying Oracle on OpenShift
-
-NOTE: You need credentials for the link:https://container-registry.oracle.com/pls/apex/f?p=113:1:113820723533011:::1:P1_BUSINESS_AREA:3:[Oracle Container Registry] in order to download Oracle DB images.
-
-WARNING: You may need to delete/adjust Limit Ranges in `$\{ORACLE_DB_PROJECT_NAME}` project because the deployment object will request 4Gi.
 
 Please run these commands as cluster-admin to deploy Oracle DB:
 
@@ -32,11 +30,17 @@ oc adm policy add-scc-to-user privileged -z default -n $\{ORACLE_DB_PROJECT_NAME
   oc adm policy add-scc-to-user anyuid -z default -n $\{ORACLE_DB_PROJECT_NAME}
 ----
 
-.Type in your user/email in the Oracle Container Regisry
+.Type in your user/email in the Oracle Container Registry
 [.console-input]
 [source,bash,options="nowrap",subs="attributes+"]
 ----
 echo -n "Reg. Email: " && read email
+----
+
+.Type in your password in the Oracle Container Registry
+[.console-input]
+[source,bash,options="nowrap",subs="attributes+"]
+----
 echo -n "Reg. Password: " && read -s password
 ----
 
@@ -50,6 +54,8 @@ oc create secret docker-registry oracle-registry \
   --docker-password=$\{password} \
   --docker-email=$\{email} -n $\{ORACLE_DB_PROJECT_NAME}
 ----
+
+WARNING: The next step may fail because of lack of resources, you may need to delete/adjust Limit Ranges in the target namespace because the deployment object will request 4Gi.
 
 .Finally deploy Oracle DB
 [.console-input]
@@ -164,7 +170,7 @@ Now that you're connected to the container run this command...
 NOTE: The prompt look like this => `sh-4.2$`
 
 [.console-input]
-[source,bash,options="nowrap",subs="attributes+"]
+[source,text,options="nowrap",subs="attributes+"]
 ----
 sqlplus system/Kube#2020@localhost:1521/$\{ORACLE_PDB}
 ----
@@ -240,7 +246,9 @@ export PROJECT_NAME={project_name}
 oc new-project $\{PROJECT_NAME}
 ----
 
-We want to connect to the Oracle DB as if it were external, so let'd create a Service using a external name:
+[#define-external-service]
+=== Define the database service as external
+We want to connect to the Oracle DB as if it were external, so let's create a `Service` using a external name:
 
 [.console-input]
 [source,bash,options="nowrap",subs="attributes+"]
@@ -256,7 +264,7 @@ spec:
 EOF
 ----
 
-NOTE: This is not the only way, you could create a service with no selector and point to an external but reacheable IP address, as in this example. We cannot use this apporach because the IP of our Oracle DB is internal and this is not allowed. Here you are an example.
+NOTE: This is not the only way, you could create a service with no selector and point to an external but reachable IP address, as in this example. We cannot use this approach because the IP of our Oracle DB is internal and this is not allowed. Here you are an example.
 
 [source,yaml,options="nowrap",subs="attributes+"]
 ----
@@ -399,7 +407,7 @@ This needs to be run by a `cluster-admin`
 [.console-input]
 [source,bash,options="nowrap",subs="verbatim,attributes+"]
 ----
-oc adm policy add-scc-to-user privileged -z default -n $\{PROJECT_NAME}
+oc adm policy add-scc-to-user privileged -z default -n $\{PROJECT_NAME} && \
 oc adm policy add-scc-to-user anyuid -z default -n $\{PROJECT_NAME}
 ----
 ===============================
@@ -407,6 +415,9 @@ oc adm policy add-scc-to-user anyuid -z default -n $\{PROJECT_NAME}
 NOTE: Telepresence will modify the network so that Services in Kubernetes are reachable from your laptop and vice versa. 
 
 The next command will result in the deployment for our application being scaled down to zero and the network altered so that traffic to it ends up in your laptop in port `8080`.
+
+.Deployment scaled down to zero while using Telepresence
+image::fruit-service-oracle-topology-telepresence.png[Fruit Service on Oracle Topology - Spring Boot with Telepresence]
 
 IMPORTANT: You'll be asked for `sudo` password, this is normal, telepresence needs to be able to modify networking rules so that you can see Kubernetes Services as local.
 

@@ -3,7 +3,9 @@ include::_attributes.adoc[]
 :database_name: postgresql
 :project_name: %USERNAME%-{artifact_id}-{database_name}
 
-So before we deploy the code we need a Database right? For the sake of simplicity let's deploy PostgreSQL using some simple `oc` commands. Maybe in your real deployment you would use an external instance. 
+So before we deploy the code we need a Database right? For the sake of simplicity let's deploy PostgreSQL using some simple `oc` commands.
+
+NOTE: Maybe in your real deployment you would use an external instance. In that case you can find an example of a external `Service` definition xref:02c-spring-boot-deploy-oracle.adoc#define-external-service[here].
 
 [#deploy-database]
 == Deploying PostgreSQL on OpenShift
@@ -92,7 +94,7 @@ This needs to be run by a `cluster-admin`
 [.console-input]
 [source,bash,options="nowrap",subs="verbatim,attributes+"]
 ----
-oc adm policy add-scc-to-user privileged -z default -n $\{PROJECT_NAME}
+oc adm policy add-scc-to-user privileged -z default -n $\{PROJECT_NAME} && \
 oc adm policy add-scc-to-user anyuid -z default -n $\{PROJECT_NAME}
 ----
 ===============================
@@ -100,6 +102,9 @@ oc adm policy add-scc-to-user anyuid -z default -n $\{PROJECT_NAME}
 NOTE: Telepresence will modify the network so that Services in Kubernetes are reachable from your laptop and vice versa. 
 
 The next command will result in the deployment for our application being scaled down to zero and the network altered so that traffic to it ends up in your laptop in port `8080`.
+
+.Deployment scaled down to zero while using Telepresence
+image::fruit-service-postgresql-topology-telepresence.png[Fruit Service on PostgreSQL Topology - Spring Boot with Telepresence]
 
 IMPORTANT: You'll be asked for `sudo` password, this is normal, telepresence needs to be able to modify networking rules so that you can see Kubernetes Services as local.
 
@@ -111,7 +116,7 @@ oc project $\{PROJECT_NAME}
 telepresence --swap-deployment {artifact_id} --expose 8080
 ----
 
-Evetually you'll se something like this:
+Eventually you'll se something like this:
 
 [.console-output]
 [source,text,options="nowrap",subs="attributes+"]

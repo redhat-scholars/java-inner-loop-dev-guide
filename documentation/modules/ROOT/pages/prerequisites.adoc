@@ -17,10 +17,10 @@ Please have them installed and configured before you get started with any of the
 | https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable-{oc-version}/openshift-client-linux.tar.gz[Download]
 | https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable-{oc-version}/openshift-client-windows.zip[Download]
 
-| `kubectl {kubernetes-version}`
-| https://storage.googleapis.com/kubernetes-release/release/{kubernetes-version}/bin/darwin/amd64/kubectl[Download]
-| https://storage.googleapis.com/kubernetes-release/release/{kubernetes-version}/bin/linux/amd64/kubectl[Download]
-| https://storage.googleapis.com/kubernetes-release/release/{kubernetes-version}/bin/windows/amd64/kubectl.exe[Download]
+// | `kubectl {kubernetes-version}`
+// | https://storage.googleapis.com/kubernetes-release/release/{kubernetes-version}/bin/darwin/amd64/kubectl[Download]
+// | https://storage.googleapis.com/kubernetes-release/release/{kubernetes-version}/bin/linux/amd64/kubectl[Download]
+// | https://storage.googleapis.com/kubernetes-release/release/{kubernetes-version}/bin/windows/amd64/kubectl.exe[Download]
 
 | `Apache Maven {maven-version}`
 | https://archive.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz[Download]

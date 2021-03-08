@@ -7,10 +7,11 @@ The following CLI tools are optional for running the exercises in this tutorial.
 |===
 
 |**Tool**|**macOS**|**Fedora**|**Windows**
-| `odo {odo-version}`
-| https://mirror.openshift.com/pub/openshift-v4/clients/odo/{odo-version}/odo-darwin-amd64[Download]
-| https://mirror.openshift.com/pub/openshift-v4/clients/odo/{odo-version}/odo-linux-amd64[Download]
-| https://mirror.openshift.com/pub/openshift-v4/clients/odo/{odo-version}/odo-windows-amd64.exe[Download]
+
+// | `odo {odo-version}`
+// | https://mirror.openshift.com/pub/openshift-v4/clients/odo/{odo-version}/odo-darwin-amd64[Download]
+// | https://mirror.openshift.com/pub/openshift-v4/clients/odo/{odo-version}/odo-linux-amd64[Download]
+// | https://mirror.openshift.com/pub/openshift-v4/clients/odo/{odo-version}/odo-windows-amd64.exe[Download]
 
 
 // | https://github.com/mikefarah/yq[yq v2.4.1]

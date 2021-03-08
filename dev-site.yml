@@ -16,7 +16,7 @@ asciidoc:
     #title: Java Inner Loop Dev Guide
     git_base: https://github.com/redhat-scholars 
     git_uri: java-inner-loop-dev-guide  
-    git_ref: main
+    git_ref: master
   extensions:
     - ./lib/remote-include-processor.js
     - ./lib/tab-block.js

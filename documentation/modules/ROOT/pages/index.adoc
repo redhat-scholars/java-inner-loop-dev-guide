@@ -17,7 +17,7 @@ ____
 
 In general we all agree these distributed architectures have lots of benefits but also pose some challenges. One of those challenges we’d like to *highlight here is the problem a developer has to face when developing kubernetes native applications*.
 
-The truth is that, even though you will evetually run your code inside a kubernetes cluster, you still develop (in general) locally where you have your IDE, compilers, etc. There are several ways to explain the development cycle, for example. 
+The truth is that, even though you will eventually run your code inside a kubernetes cluster, you still develop (in general) locally where you have your IDE, compilers, etc. There are several ways to explain the development cycle, for example. 
 
 [quote]
 ____
@@ -55,7 +55,7 @@ image::inner-vs-outer-loop-extended.png[Inner extended to the kubernetes cluster
 
 Nowadays, given the distributed nature of applications, *developers find themselves dealing with a plethora of services they need to integrate with* at development time. *So the challenge is for those services to be accessible/available and sometimes this is not easy*.
 
-Let's review some of the approches you can take in order to mitigate this problem.
+Let's review some of the approaches you can take in order to mitigate this problem.
 
 [#approaches]
 == Approaches To Mitigate The Problem
@@ -89,6 +89,45 @@ You will:
 Optionally, although highly recommended, you will do the same but this time against an Oracle database. You will learn how to use a Kubernetes `Service` of type `ExternalName` to point to the Oracle database as if it were not deployed in your cluster, hence external. 
 
 NOTE: No worries if you don't have an Oracle database at hand, we'll show you how you can have an Oracle database running in a container in your OpenShift cluster (for testing purposes and as long as you have an OTN developer account you can use to pull images from the Oracle Container Registry).
+
+[#lab-parameters]
+== Lab parameters
+
+This lab has requires you to have access to an OpenShift cluster. This cluster can be remote or local if you use link:https://developers.redhat.com/products/codeready-containers/overview[*CodeReady Containers*, window=_blank] or *CRC* for short.
+
+NOTE: Use this link:https://cloud.redhat.com/openshift/create/local[link, window=_blank] if you want to jump directly to the instructions to download and install *CRC*.
+
+Throughout the guide you'll find URLs and commands crafted for your user and cluster, in order to make the experience as smooth as possible it would be great if you could craft a URL including the next variables and values.
+
+[cols="2*^,2*.",options="header,+attributes"]
+|===
+|**Key**|**Value**
+
+| USERNAME
+| developer
+| PASSWORD
+| developer
+| CLUSTER_SUBDOMAIN
+| apps-crc.testing
+
+|===
+
+If you add the above variables to this lab url you will end up with something like this: link:{site-url}?USERNAME=developer&PASSWORD=developer&CLUSTER_SUBDOMAIN=apps-crc.testing#lab-parameters[{site-url}?USERNAME=developer&PASSWORD=developer&CLUSTER_SUBDOMAIN=apps-crc.testing, window=_blank]
+
+If you click on the link above or have already added the mentioned variables you will see correct values below, if that's not the case you will see *'%'* signs surrounding variables names as values.
+
+[cols="2*^,2*.",options="header,+attributes"]
+|===
+|**Key**|**Value**
+
+| USERNAME
+| %USERNAME%
+| PASSWORD
+| %PASSWORD%
+| CLUSTER_SUBDOMAIN
+| %CLUSTER_SUBDOMAIN%
+
+|===
 
 [.tiles.browse]
 == Browse modules

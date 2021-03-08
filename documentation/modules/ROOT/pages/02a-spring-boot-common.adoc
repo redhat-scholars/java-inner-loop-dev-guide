@@ -91,6 +91,8 @@ public class FruitController {
 
 Time to get our hands dirty. Clone or download the code, your choice.
 
+IMPORTANT: Choose a folder to put the code into and stick to it till the end of the guide. All paths are relative to this folder.
+
 [tabs]
 ====
 Clone the code::
@@ -127,6 +129,8 @@ As we stated at the beginning we want to use different databases, *H2* to develo
 * *local* for H2
 * *openshift-postgresql* for PostgreSQL
 * *openshift-oracle* for Oracle
+
+NOTE: As usual you can find those profiles at: `src/main/resources`.
 
 [tabs]
 ====
@@ -184,7 +188,12 @@ spring.jpa.hibernate.ddl-auto=create
 --
 ====
 
-There are, accordingly, three different `import.sql` files, since each database has a different way of referring to the next value of a database sequence.
+[#import-files]
+== Import files
+
+There are, accordingly, three different `import.sql` files, since each database has a different way of referring to the next value of a database sequence. 
+
+NOTE: You can find import files here: `src/main/resources`.
 
 [tabs]
 ====
@@ -224,7 +233,7 @@ One decision made for this example was to keep it as SQL-standard as possible so
 
 As we have said before in this guide you'll not have to code, instead we'll focus on running, testing, deploying, etc.
 
-Let's get started and see if the code works locally and using H2.
+Let's get started and see if the code works locally and using H2. 
 
 [.console-input]
 [source,bash,options="nowrap",subs="attributes+"]
@@ -234,12 +243,11 @@ mvn clean spring-boot:run -Dspring-boot.run.profiles=local -Plocal
 
 You should get this output.
 
-.TIPS
 [TIP]
 ===============================
-Pay attention to the profile in use => *The following profiles are active: `local`*. 
+* Pay attention to the profile in use: *The following profiles are active: `local`*. 
 
-Also the `import.sql` file used => *Executing import script 'file:/Users/nostromo/.../import-h2.sql'*
+* Also the `import.sql` file used: *Executing import script 'file:/Users/nostromo/.../import-h2.sql'*
 ===============================
 
 [.console-output]
@@ -276,3 +284,4 @@ You should see this:
 
 image::fruit-service-h2-display.png[Fruit Service on H2]
 
+Now you can stop the process with kbd:[Ctrl+C] and go on with the lab.

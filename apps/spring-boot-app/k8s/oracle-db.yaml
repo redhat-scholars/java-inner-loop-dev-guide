@@ -66,6 +66,8 @@ metadata:
     version: 19.3.0.1
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: database
@@ -94,8 +96,8 @@ spec:
              claimName: ora-setup193
       containers:
         - name: oracle
-          #image: registry:32000/oracledb:19.3.0-ee
-          image: container-registry.oracle.com/database/enterprise:19.3.0.0
+          #image: container-registry.oracle.com/database/enterprise:19.3.0.0
+          image: container-registry.oracle.com/database/enterprise:latest
           command:
           - /opt/oracle/runOracle.sh
           imagePullPolicy: IfNotPresent
