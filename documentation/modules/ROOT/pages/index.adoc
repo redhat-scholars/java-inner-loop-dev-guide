@@ -112,7 +112,7 @@ Throughout the guide you'll find URLs and commands crafted for your user and clu
 
 |===
 
-If you add the above variables to this lab url you will end up with something like this: link:{site-url}?USERNAME=developer&PASSWORD=developer&CLUSTER_SUBDOMAIN=apps-crc.testing#lab-parameters[{site-url}?USERNAME=developer&PASSWORD=developer&CLUSTER_SUBDOMAIN=apps-crc.testing, window=_blank]
+If you add the above variables to this lab url you will end up with something like this: link:{site-url}/{page-component-name}?USERNAME=developer&PASSWORD=developer&CLUSTER_SUBDOMAIN=apps-crc.testing#lab-parameters[{site-url}/{page-component-name}?USERNAME=developer&PASSWORD=developer&CLUSTER_SUBDOMAIN=apps-crc.testing, window=_blank]
 
 If you click on the link above or have already added the mentioned variables you will see correct values below, if that's not the case you will see *'%'* signs surrounding variables names as values.
 

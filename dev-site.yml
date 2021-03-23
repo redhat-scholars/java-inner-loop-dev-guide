@@ -3,7 +3,7 @@ runtime:
 
 site:
   title: Java Inner Loop Dev Guide
-  url: http://localhost:3000/java-inner-loop-dev-guide/index.html
+  url: http://localhost:3000
   start_page: java-inner-loop-dev-guide::index.adoc
 
 content:
