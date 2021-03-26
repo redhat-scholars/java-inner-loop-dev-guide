@@ -112,10 +112,18 @@
 <body ng-app="FruitManagement" ng-controller="FruitManagementController">
 
 <div class="container">
-    <h1>CRUD Mission - Spring Boot</h1>
+    <h1>Fruit Service - Spring Boot</h1>
     <p>
         This application demonstrates how a Spring Boot application implements a CRUD endpoint to manage <em>fruits</em>.
-        This management interface invokes the CRUD service endpoint, that interact with a ${db.type} database named ${db.name} using profile ${profile.name}.
+    </p>
+
+    <p>
+      This management interface invokes the CRUD service endpoint with the following setup:
+      <ul>
+        <li><b>Database Type:</b> ${db.type}</li>
+        <li><b>Database Name:</b> ${db.name}</li>
+        <li><b>Spring Boot profile:</b> ${profile.name}</li>
+      </ul>
     </p>
 
     <h3>Add/Edit a fruit</h3>
