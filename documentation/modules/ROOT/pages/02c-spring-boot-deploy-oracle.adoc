@@ -472,7 +472,7 @@ Now from another terminal:
 [source,bash,options="nowrap",subs="attributes+"]
 ----
 export PROJECT_NAME={project_name}
-SERVICE_DB_USER=luke SERVICE_DB_PASSWORD=secret SERVICE_DB_NAME=FRUITSDB SERVICE_DB_HOST=oracle-db \
+SERVICE_DB_USER=luke SERVICE_DB_PASSWORD=secret SERVICE_DB_NAME=ORCLPDB1 SERVICE_DB_HOST=oracle-db \
   mvn clean spring-boot:run -Dspring-boot.run.profiles=openshift-oracle -Popenshift-oracle
 ----
 
